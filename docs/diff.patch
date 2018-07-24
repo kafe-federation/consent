@@ -1,0 +1,1808 @@
+diff -urN consent_org/dictionaries/consent.definition.json consent/dictionaries/consent.definition.json
+--- consent_org/dictionaries/consent.definition.json	2017-07-25 05:42:27.793688380 +0000
++++ consent/dictionaries/consent.definition.json	2017-07-26 05:35:51.336810766 +0000
+@@ -27,7 +27,7 @@
+ 		"en": "show\/hide attributes"
+ 	},
+ 	"consent_privacypolicy": {
+-		"en": "Privacypolicy for the service"
++		"en": "By logging in you agree to the privacy policy of"
+ 	},
+ 	"noconsent_title": {
+ 		"en": "No consent given"
+@@ -42,8 +42,11 @@
+ 		"en": "Consent about releasing personal information"
+ 	},
+ 	"consent_attributes_header": {
+-		"en": "Information that will be sent to SPNAME"
++		"en": "Information will be sent to SPNAME NATION"
+ 	},
++	"consent_refuse_right_header": {
++                "en": "You are free to refuse. In this case the service you tried to access will be unavailable."
++        },
+ 	"show_attributes": {
+ 		"en": "Show attributes"
+ 	},
+diff -urN consent_org/dictionaries/consent.php consent/dictionaries/consent.php
+--- consent_org/dictionaries/consent.php	2017-07-25 05:42:27.793688380 +0000
++++ consent/dictionaries/consent.php	2017-07-26 05:35:51.336810766 +0000
+@@ -128,7 +128,7 @@
+ 		'no' => 'Personvern for tjenesten',
+ 		'nn' => 'Personvern for tenesta',
+ 		'da' => 'Tjenestens politik vedrørende personoplysninger',
+-		'en' => 'Privacypolicy for the service',
++		'en' => 'By logging in you agree to the privacy policy of',
+ 		'de' => 'Datenschutzrichtlinie des Dienstes',
+ 		'sv' => 'Tjänstens policy för personlig integritet',
+ 		'fi' => 'Tietosuojaseloste palvelulle',
+@@ -159,6 +159,9 @@
+ 		'pt' => 'Informação que irá ser enviada para SPNAME',
+ 		'tr' => 'SPNAME\'e gönderilecek bilgiler',
+ 	),
++	'consent_refuse_right_header' => array (
++                'en' => 'You are free to refuse. In this case the service you tried to access will be unavailable.',
++        ),
+ 	'show_attributes' => array (
+ 		'no' => 'Vis opplysninger',
+ 		'nn' => 'Vis opplysingar',
+@@ -386,3 +389,6 @@
+ 	),
+ 
+ );
++
++
++?>
+diff -urN consent_org/dictionaries/consent.translation.json consent/dictionaries/consent.translation.json
+--- consent_org/dictionaries/consent.translation.json	2017-07-25 05:42:27.793688380 +0000
++++ consent/dictionaries/consent.translation.json	2017-07-26 05:35:51.336810766 +0000
+@@ -31,8 +31,7 @@
+ 		"id": "Yam lanjutkan",
+ 		"sr": "Da, nastavi",
+ 		"ro": "Da, continu\u0103",
+-		"eu": "Bai, jarraitu",
+-		"af": "Ja, voortgaan"
++		"eu": "Bai, jarraitu"
+ 	},
+ 	"no": {
+ 		"no": "Nei, avbryt",
+@@ -66,8 +65,7 @@
+ 		"id": "Tidak, batalkan",
+ 		"sr": "Ne, odustani",
+ 		"ro": "Nu, renun\u021b",
+-		"eu": "Ez, utzi",
+-		"af": "Nee, kanselleer"
++		"eu": "Ez, utzi"
+ 	},
+ 	"remember": {
+ 		"no": "Godta ogs\u00e5 for fremtiden",
+@@ -101,8 +99,7 @@
+ 		"id": "Ingat",
+ 		"sr": "Zapamti moj izbor",
+ 		"ro": "\u021aine minte",
+-		"eu": "Onespena gogoratu",
+-		"af": "Onthou"
++		"eu": "Onespena gogoratu"
+ 	},
+ 	"consent_accept": {
+ 		"no": "For \u00e5 fullf\u00f8re innloggingen m\u00e5 du godta at opplysningene nedenfor sendes til SPNAME.",
+@@ -136,8 +133,7 @@
+ 		"id": "SPNAME mensyaratkan informasi dibawah ini harus ditransder.",
+ 		"sr": "Servis SPNAME zahteva slanje dole navedenih podataka.",
+ 		"ro": "SPNAME solicit\u0103 trimiterea informa\u021biilor de mai jos.",
+-		"eu": "Zerbitzuak, hemen agertzen den informazioa lekualdatzea eskatzen du.",
+-		"af": "SPNAME vereis dat die inligting hieronder oorgedra word."
++		"eu": "Zerbitzuak, hemen agertzen den informazioa lekualdatzea eskatzen du."
+ 	},
+ 	"login": {
+ 		"no": "innlogging",
+@@ -171,8 +167,7 @@
+ 		"id": "login",
+ 		"sr": "prijavi se",
+ 		"ro": "autentificare",
+-		"eu": "hasi saioa",
+-		"af": "meld aan"
++		"eu": "hasi saioa"
+ 	},
+ 	"service_providers_for": {
+ 		"no": "Tjenesteleverand\u00f8r for",
+@@ -206,8 +201,7 @@
+ 		"id": "Service Provider untuk",
+ 		"sr": "Davaoci Servisa za",
+ 		"ro": "Furnizor de servicii pentru",
+-		"eu": "Zerbitzu hornitzaileak hontarako: ",
+-		"af": "Diens Verskaffers vir"
++		"eu": "Zerbitzu hornitzaileak hontarako: "
+ 	},
+ 	"service_provider_header": {
+ 		"no": "Tjenesteleverand\u00f8r",
+@@ -241,8 +235,7 @@
+ 		"id": "Service Provider",
+ 		"sr": "Davalac Servisa",
+ 		"ro": "Furnizor de servicii",
+-		"eu": "Zerbitzu hornitzailea",
+-		"af": "Diens Verskaffer"
++		"eu": "Zerbitzu hornitzailea"
+ 	},
+ 	"status_header": {
+ 		"no": "Samtykke-status",
+@@ -276,8 +269,7 @@
+ 		"id": "Status persetujuan",
+ 		"sr": "Status odobrenja",
+ 		"ro": "Stare acord",
+-		"eu": "Onespen egoera",
+-		"af": "Toestemming status"
++		"eu": "Onespen egoera"
+ 	},
+ 	"show_hide_attributes": {
+ 		"no": "Vis\/skjul opplysninger",
+@@ -311,8 +303,7 @@
+ 		"id": "perlihatkan\/sembunyikan attribut",
+ 		"sr": "prika\u017ei\/sakrij atribute",
+ 		"ro": "arat\u0103\/ascunde atributele",
+-		"eu": "erakutsi\/gorde atributuak",
+-		"af": "vertoon\/verberg eienskappe"
++		"eu": "erakutsi\/gorde atributuak"
+ 	},
+ 	"consent_privacypolicy": {
+ 		"no": "Personvern for tjenesten",
+@@ -345,8 +336,7 @@
+ 		"id": "Kebijakan privasi untuk layanan",
+ 		"sr": "Politika za\u0161tite privatnosti kod servisa",
+ 		"ro": "Politica de confiden\u021bialitate pentru serviciu",
+-		"eu": "Zerbitzuarentzako pribatutasun-politika",
+-		"af": "Privaatheidsbeleid vir die diens"
++		"eu": "Zerbitzuarentzako pribatutasun-politika"
+ 	},
+ 	"noconsent_title": {
+ 		"no": "Ikke akseptert overf\u00f8ring av informasjon",
+@@ -379,8 +369,7 @@
+ 		"id": "Tidan ada persetujuan yang diberikan",
+ 		"sr": "Slanje podataka nije odobreno",
+ 		"ro": "Nu a fost dat acordul (consim\u021b\u0103m\u00e2ntul)",
+-		"eu": "Ez da onespena eman",
+-		"af": "Geen toestemming is gegee nie"
++		"eu": "Ez da onespena eman"
+ 	},
+ 	"noconsent_text": {
+ 		"no": "Du har ikke akseptert \u00e5 overlevere opplysninger til SPNAME.",
+@@ -413,8 +402,7 @@
+ 		"id": "Anda tidak memberikan persetujuan untuk mentransfer atribut-atribute Anda ke service provider.",
+ 		"sr": "Niste odobrili da se va\u0161i podaci po\u0161alju davaocu servisa.",
+ 		"ro": "Nu a\u021bi fost de acord s\u0103 trimite\u021bi atributele c\u0103tre SPNAME.",
+-		"eu": "Ez duzu onespena eman zure atributuak zerbitzuari transferitzeko.",
+-		"af": "Jy het nie toestemming gegee vir die oordrag van jou eienskappe na SPNAME nie."
++		"eu": "Ez duzu onespena eman zure atributuak zerbitzuari transferitzeko."
+ 	},
+ 	"noconsent_return": {
+ 		"no": "G\u00e5 tilbake til samtykkesiden",
+@@ -447,8 +435,7 @@
+ 		"sr": "Povratak na stranicu za kreiranje pristanka",
+ 		"ro": "\u00centoarcere la pagina de consim\u021b\u0103m\u00e2nt",
+ 		"ru": "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u043d\u0430 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 \u0434\u043b\u044f \u0432\u044b\u0440\u0430\u0436\u0435\u043d\u0438\u044f \u0441\u043e\u0433\u043b\u0430\u0441\u0438\u044f",
+-		"eu": "Itzuli onespen orrira",
+-		"af": "Keer terug na die toestemmingsbladsy"
++		"eu": "Itzuli onespen orrira"
+ 	},
+ 	"consent_header": {
+ 		"no": "Samtykke om overf\u00f8ring av personinformasjon",
+@@ -481,8 +468,7 @@
+ 		"sr": "Pristanak za slanje li\u010dnih podataka",
+ 		"ro": "Acordul pentru a furniza informa\u021bii personale",
+ 		"ru": "\u0421\u043e\u0433\u043b\u0430\u0441\u0438\u0435 \u043d\u0430 \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0443 \u043d\u0435\u043a\u043e\u0442\u043e\u0440\u044b\u0445 \u043f\u0435\u0440\u0441\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0445 \u0434\u0430\u043d\u043d\u044b\u0445",
+-		"eu": "Informazio pertsonala askatzeko onespena ",
+-		"af": "Toestemming mbt. die vrystelling van persoonlike informasie"
++		"eu": "Informazio pertsonala askatzeko onespena "
+ 	},
+ 	"consent_attributes_header": {
+ 		"no": "Opplysninger som vil bli sendt til SPNAME",
+@@ -514,8 +500,7 @@
+ 		"sr": "Informacije koje \u0107e biti poslate servisu SPNAME",
+ 		"ro": "Informa\u021bii care vor fi trimise la SPNAME",
+ 		"ru": "\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f, \u043a\u043e\u0442\u043e\u0440\u0430\u044f \u0431\u0443\u0434\u0435\u0442 \u043f\u0435\u0440\u0435\u0434\u0430\u043d\u0430 \u0432 SPNAME ",
+-		"eu": "Zerbitzura bidaliko diren atributuak",
+-		"af": "Informasie wat gestuur sal word na SPNAME"
++		"eu": "Zerbitzura bidaliko diren atributuak"
+ 	},
+ 	"show_attributes": {
+ 		"no": "Vis opplysninger",
+@@ -548,8 +533,7 @@
+ 		"sr": "Prika\u017ei atribute",
+ 		"ro": "Arat\u0103 atributele",
+ 		"ru": "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0430\u0442\u0440\u0438\u0431\u0443\u0442\u044b",
+-		"eu": "Erakutsi atributuak",
+-		"af": "Vertoon eienskappe"
++		"eu": "Erakutsi atributuak"
+ 	},
+ 	"noconsent_goto_about": {
+ 		"no": "G\u00e5 til informasjonsside om tjenesten",
+@@ -582,8 +566,7 @@
+ 		"sr": "Idi na stranicu sa informacijama o servisu",
+ 		"ro": "Link la pagina serviciului",
+ 		"ru": "\u041f\u0435\u0440\u0435\u0439\u0442\u0438 \u043d\u0430 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 \u0441 \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0435\u0439 \u043e \u0434\u0430\u043d\u043d\u043e\u0439 \u0441\u043b\u0443\u0436\u0431\u0435",
+-		"eu": "Joan zerbitzuaren informazio orrira",
+-		"af": "Gaan na die informasie bladsy vir die diens"
++		"eu": "Joan zerbitzuaren informazio orrira"
+ 	},
+ 	"consent_purpose": {
+ 		"no": "Form\u00e5let med SPNAME er SPDESC",
+@@ -615,8 +598,7 @@
+ 		"sr": "Namena servisa SPNAME je SPDESC",
+ 		"ro": "Scopul SPNAME este SPDESC",
+ 		"ru": "\u0426\u0435\u043b\u044c SPNAME - SPDESC",
+-		"eu": "Zerbtizuaren xedea SPDESC da",
+-		"af": "Die doel van SPNAME is SPDESC"
++		"eu": "Zerbtizuaren xedea SPDESC da"
+ 	},
+ 	"table_caption": {
+ 		"no": "Bruker innformasjon",
+@@ -648,8 +630,7 @@
+ 		"ro": "Informa\u021bii despre utilizator",
+ 		"ru": "\u0418\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u044f \u043e \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0435",
+ 		"cs": "U\u017eivatelsk\u00e9 informace",
+-		"eu": "Erabiltzailearen informazioa",
+-		"af": "Gebruiker informasie"
++		"eu": "Erabiltzailearen informazioa"
+ 	},
+ 	"table_summary": {
+ 		"no": "Her listes den innformasjonen om deg som blir send til den tjenesten du er i ferd med \u00e5 logge p\u00e5",
+@@ -681,8 +662,7 @@
+ 		"ro": "Afi\u0219eaz\u0103 informa\u021biile care vor fi trimise la serviciul unde dori\u021bi s\u0103 v\u0103 autentifica\u021bi",
+ 		"ru": "\u0412\u044b\u0434\u0430\u0442\u044c \u0441\u043f\u0438\u0441\u043e\u043a \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438, \u043a\u043e\u0442\u043e\u0440\u0430\u044f \u0431\u0443\u0434\u0435\u0442 \u043f\u0435\u0440\u0435\u0434\u0430\u043d\u0430 \u0441\u043b\u0443\u0436\u0431\u0435, \u0432 \u043a\u043e\u0442\u043e\u0440\u0443\u044e \u0432\u044b \u043f\u044b\u0442\u0430\u0435\u0442\u0435\u0441\u044c \u0432\u043e\u0439\u0442\u0438",
+ 		"cs": "Seznam informac\u00ed o v\u00e1s, kter\u00e9 budou p\u0159ed\u00e1ny slu\u017eb\u011b, ke kter\u00e9 se p\u0159ihla\u0161ujete",
+-		"eu": "Zu identifikatuko zaren zerbitzura zure ze informazio bidaliko den erakusten du ",
+-		"af": "Lys die informasie mbt. jou wat op die punt is om gestuur te word vir die diens waarby jy wil aanmeld."
++		"eu": "Zu identifikatuko zaren zerbitzura zure ze informazio bidaliko den erakusten du "
+ 	},
+ 	"show_attribute": {
+ 		"no": "Vis innhold",
+@@ -713,8 +693,7 @@
+ 		"ro": "Arat\u0103 con\u021binutul",
+ 		"ru": "\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u044c \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u043c\u043e\u0435",
+ 		"cs": "Zobrazit obsah",
+-		"eu": "Erakutsi onespena",
+-		"af": "Vertoon inhoud"
++		"eu": "Erakutsi onespena"
+ 	},
+ 	"abort": {
+ 		"no": "Avbryt innlogging til SPNAME",
+@@ -733,9 +712,6 @@
+ 		"cs": "Zru\u0161it p\u0159ihl\u00e1\u0161en\u00ed k SPNAME",
+ 		"hr": "Odustani od prijave u SPNAME",
+ 		"zh": "\u4e2d\u6b62\u767b\u5f55\u5230SPNAME",
+-		"eu": "Bertan behera utzi zerbitzuan identifikazioa",
+-		"zh-tw": "\u95dc\u65bc\u767b\u5165\u81f3 SPNAME",
+-		"da": "Afbryd login til SPNAME",
+-		"af": "Kanseleer aanmelding na SPNAME"
++		"eu": "Bertan behera utzi zerbitzuan identifikazioa"
+ 	}
+ }
+diff -urN consent_org/lib/Auth/Process/Consent.php consent/lib/Auth/Process/Consent.php
+--- consent_org/lib/Auth/Process/Consent.php	2017-07-25 05:42:27.794688429 +0000
++++ consent/lib/Auth/Process/Consent.php	2017-07-26 05:35:51.384811397 +0000
+@@ -58,6 +58,22 @@
+      */
+     private $_showNoConsentAboutService = true;
+ 
++
++     /**
++      * Whether we should use the "registrationAuthority" on the consent page.
++      *
++      * @var bool
++      */
++    private $_useRegistrationAuthority = false;
++
++     /**
++      * Whether we should use the "logo" on the consent page.
++      *
++      * @var bool
++      */
++    private $_useLogo = false;
++
++
+     /**
+      * Initialize consent filter
+      *
+@@ -139,6 +155,14 @@
+             $this->_showNoConsentAboutService = $config['showNoConsentAboutService'];
+         }
+ 
++	if (array_key_exists('useRegistrationAuthority', $config)) {
++            $this->_useRegistrationAuthority = $config['useRegistrationAuthority'];
++        }
++
++	if (array_key_exists('useLogo', $config)) {
++            $this->_useLogo = $config['useLogo'];
++	}	
++
+     }
+ 
+     /**
+@@ -238,8 +262,15 @@
+             try {
+                 if ($this->_store->hasConsent($userId, $targetedId, $attributeSet)) {
+                     // Consent already given
+-                    SimpleSAML_Logger::stats('Consent: Consent found');
++                    SimpleSAML_Logger::stats('consent found');
+                     SimpleSAML_Stats::log('consent:found', $statsData);
++
++
++	            // 접속 로깅
++                    // IDP: '.$state['Source']['entityid'].',
++                    $logging = 'LOGIN - SP: '.$state['Destination']['entityid'].', USER: '.json_encode($state['Attributes']);
++                    SimpleSAML_Logger::notice($logging);
++
+                     return;
+                 }
+ 
+@@ -265,6 +296,8 @@
+         $state['consent:hiddenAttributes']    = $this->_hiddenAttributes;
+         $state['consent:noconsentattributes'] = $this->_noconsentattributes;
+         $state['consent:showNoConsentAboutService'] = $this->_showNoConsentAboutService;
++        $state['consent:useRegistrationAuthority'] = $this->_useRegistrationAuthority;
++        $state['consent:useLogo'] = $this->_useLogo;
+ 
+         // User interaction nessesary. Throw exception on isPassive request	
+         if (isset($state['isPassive']) && $state['isPassive'] === true) {
+diff -urN consent_org/lib/Config.php consent/lib/Config.php
+--- consent_org/lib/Config.php	1970-01-01 00:00:00.000000000 +0000
++++ consent/lib/Config.php	2017-07-26 05:35:51.383811390 +0000
+@@ -0,0 +1,304 @@
++<?php
++
++// attributeAuthority 목록
++$AA = array(
++	'https://aai.asnet.am' => 'AM',
++	'https://aaf.edu.au' => 'AU',
++	'http://eduid.at' => 'AT',
++	'https://febas.basnet.by' => 'BY',
++	'http://federation.belnet.be' => 'BE',
++	'http://cafe.rnp.br' => 'BR',
++	'http://www.canarie.ca' => 'CA',
++	'http://cofre.reuna.cl' => 'CL',
++	'http://colfire.co' => 'CO',
++	'http://www.srce.hr' => 'HR',
++	'http://www.eduid.cz' => 'CZ',
++	'https://www.wayf.dk' => 'DK',
++	'https://minga.cedia.org.ec' => 'EC',
++	'http://taat.edu.ee' => 'EE',
++	'http://www.csc.fi/haka' => 'FI',
++	'https://federation.renater.fr' => 'FR',
++	'https://mtd.gif.grena.ge' => 'GE',
++	'https://www.aai.dfn.de' => 'DE',
++	'http://aai.grnet.gr' => 'GR',
++	'http://eduid.hu' => 'HU',
++	'http://inflibnet.ac.in' => 'IN',
++	'http://www.heanet.ie' => 'IE',
++	'http://iif.iucc.ac.il' => 'IL',
++	'http://www.idem.garr.it' => 'IT',
++	'https://www.gakunin.jp' => 'JP',
++	'http://kafe.kreonet.net' => 'KR',
++	'http://laife.lanet.lv' => 'LV',
++	'https://fedi.litnet.lt' => 'LT',
++	'http://eduid.lu' => 'LU',
++	'https://rr.aaiedu.mk' => 'MK',
++	'http://federations.renam.md' => 'MD',
++	'http://feide.no' => 'NO',
++	'https://aai.pionier.net.pl' => 'PL',
++	'https://www.fccn.pt' => 'PT',
++	'http://aai.arnes.si' => 'SI',
++	'https://safire.ac.za' => 'ZA',
++	'http://www.rediris.es' => 'ES',
++	'http://www.swamid.se' => 'SE',
++	'http://rr.aai.switch.ch' => 'CH',
++	'http://www.surfconext.nl' => 'NL',
++	'https://incommon.org' => 'US',
++	'https://peano.uran.ua' => 'UA',
++	'http://ukfederation.org.uk' => 'UK',
++	'http://www.federacionmate.gob.ar' => 'AR',
++	'http://gridp.garr.it' => 'IT',
++	'https://www.aai.arn.dz' => 'DZ',
++	'http://bif.bren.bg' => 'BG',
++	'https://ds.sgaf.org.sg' => 'SG',
++	'http://safeid.sk' => 'SK',
++	'https://www.renu.ac.ug' => 'UG',
++);
++
++// ISO_3166-1_alpha-2 를 국가명으로...
++$NATION = array(
++	'GH' => 'GHANA',
++	'GA' => 'GABON',
++	'GY' => 'GUYANA',
++	'GM' => 'GAMBIA',
++	'GG' => 'GUERNSEY',
++	'GP' => 'GUADELOUPE',
++	'GT' => 'GUATEMALA',
++	'GU' => 'GUAM',
++	'GD' => 'GRENADA',
++	'GR' => 'GREECE',
++	'GL' => 'GREENLAND',
++	'GN' => 'GUINEA',
++	'GW' => 'GUINEA-BISSAU',
++	'NA' => 'NAMIBIA',
++	'NR' => 'NAURU',
++	'NG' => 'NIGERIA',
++	'AQ' => 'ANTARCTICA',
++	'SS' => 'REPUBLIC OF SOUTH SUDAN',
++	'ZA' => 'SOUTH AFRICA',
++	'NL' => 'NETHERLANDS',
++	'AN' => 'NETHERLANDS ANTILLES',
++	'NP' => 'NEPAL',
++	'NO' => 'NORWAY',
++	'NF' => 'NORFOLK ISLAND',
++	'NC' => 'NEW CALEDONIA',
++	'NZ' => 'NEW ZEALAND',
++	'NU' => 'NIUE',
++	'NE' => 'NIGER',
++	'NI' => 'NICARAGUA',
++	'KR' => 'KOREA, REPUBLIC OF',
++	'DK' => 'DENMARK',
++	'DO' => 'DOMINICAN REPUBLIC',
++	'DM' => 'DOMINICA',
++	'DE' => 'GERMANY',
++	'TL' => 'EAST TIMOR',
++	'LA' => 'LAO PEOPLE\'S DEMOCRATIC REPUBLIC',
++	'LR' => 'LIBERIA',
++	'LV' => 'LATVIA',
++	'RU' => 'RUSSIAN FEDERATION',
++	'LB' => 'LEBANON',
++	'LS' => 'LESOTHO',
++	'RE' => 'REUNION',
++	'RO' => 'ROMANIA',
++	'LU' => 'LUXEMBOURG',
++	'RW' => 'RWANDA',
++	'LY' => 'LIBYAN ARAB JAMAHIRIYA',
++	'LT' => 'LITHUANIA',
++	'LI' => 'LIECHTENSTEIN',
++	'MG' => 'MADAGASCAR',
++	'MQ' => 'MARTINIQUE',
++	'MH' => 'MARSHALL ISLANDS',
++	'YT' => 'MAYOTTE',
++	'MO' => 'MACAU',
++	'MK' => 'REPUBLIC OF MACEDONIA',
++	'MW' => 'MALAWI',
++	'MY' => 'MALAYSIA',
++	'ML' => 'MALI',
++	'IM' => 'ISLE OF MAN',
++	'MX' => 'MEXICO',
++	'MC' => 'MONACO',
++	'MA' => 'MOROCCO',
++	'MU' => 'MAURITIUS',
++	'MR' => 'MAURITANIA',
++	'MZ' => 'MOZAMBIQUE',
++	'ME' => 'MONTENEGRO',
++	'MS' => 'MONTSERRAT',
++	'MD' => 'MOLDOVA, REPUBLIC OF',
++	'MV' => 'MALDIVES',
++	'MT' => 'MALTA',
++	'MN' => 'MONGOLIA',
++	'US' => 'UNITED STATES',
++	'UM' => 'UNITED STATES MINOR OUTLYING ISLANDS',
++	'VI' => 'VIRGIN ISLANDS, U.S.',
++	'MM' => 'MYANMAR',
++	'FM' => 'MICRONESIA',
++	'VU' => 'VANUATU',
++	'BH' => 'BAHRAIN',
++	'BB' => 'BARBADOS',
++	'VA' => 'VATICAN CITY STATE',
++	'BS' => 'BAHAMAS',
++	'BD' => 'BANGLADESH',
++	'BM' => 'BERMUDA',
++	'BJ' => 'BENIN',
++	'VE' => 'VENEZUELA',
++	'VN' => 'VIET NAM',
++	'BE' => 'BELGIUM',
++	'BY' => 'BELARUS',
++	'BZ' => 'BELIZE',
++	'BA' => 'BOSNIA HERCEGOVINA',
++	'BW' => 'BOTSWANA',
++	'BO' => 'BOLIVIA',
++	'BI' => 'BURUNDI',
++	'BF' => 'BURKINA FASO',
++	'BV' => 'BOUVET ISLAND',
++	'BT' => 'BHUTAN',
++	'MP' => 'NORTHERN MARIANA ISLANDS',
++	'BG' => 'BULGARIA',
++	'BR' => 'BRAZIL',
++	'BN' => 'BRUNEI DARUSSALAM',
++	'WS' => 'SAMOA',
++	'SA' => 'SAUDI ARABIA',
++	'GS' => 'SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS',
++	'SM' => 'SAN MARINO',
++	'ST' => 'SAO TOME AND PRINCIPE',
++	'PM' => 'ST. PIERRE AND MIQUELON',
++	'EH' => 'WESTERN SAHARA',
++	'SN' => 'SENEGAL',
++	'RS' => 'SERBIA',
++	'SC' => 'SEYCHELLES',
++	'LC' => 'SAINT LUCIA',
++	'VC' => 'SAINT VINCENT AND THE GRENADINES',
++	'KN' => 'SAINT KITTS AND NEVIS',
++	'SH' => 'ST. HELENA',
++	'SO' => 'SOMALIA',
++	'SB' => 'SOLOMON ISLANDS',
++	'SD' => 'SUDAN',
++	'SR' => 'SURINAME',
++	'LK' => 'SRI LANKA',
++	'SJ' => 'SVALBARD AND JAN MAYEN ISLANDS',
++	'SZ' => 'SWAZILAND',
++	'SE' => 'SWEDEN',
++	'CH' => 'SWITZERLAND',
++	'ES' => 'SPAIN',
++	'SK' => 'SLOVAKIA',
++	'SI' => 'SLOVENIA',
++	'SY' => 'SYRIAN ARAB REPUBLIC',
++	'SL' => 'SIERRA LEONE',
++	'SG' => 'SINGAPORE',
++	'AE' => 'UNITED ARAB EMIRATES',
++	'AW' => 'ARUBA',
++	'AM' => 'ARMENIA',
++	'AR' => 'ARGENTINA',
++	'AS' => 'AMERICAN SAMOA',
++	'IS' => 'ICELAND',
++	'HT' => 'HAITI',
++	'IE' => 'IRELAND',
++	'AZ' => 'AZERBAIJAN',
++	'AF' => 'AFGHANISTAN',
++	'AD' => 'ANDORRA',
++	'AL' => 'ALBANIA',
++	'DZ' => 'ALGERIA',
++	'AO' => 'ANGOLA',
++	'AG' => 'ANTIGUA AND BARBUDA',
++	'AI' => 'ANGUILLA',
++	'ER' => 'ERITREA',
++	'EE' => 'ESTONIA',
++	'EC' => 'ECUADOR',
++	'ET' => 'ETHIOPIA',
++	'SV' => 'EL SALVADOR',
++	'GB' => 'UNITED KINGDOM',
++	'VG' => 'VIRGIN ISLANDS, BRITISH',
++	'IO' => 'BRITISH INDIAN OCEAN TERRITORY',
++	'YE' => 'YEMEN, REPUBLIC OF',
++	'OM' => 'OMAN',
++	'AU' => 'AUSTRALIA',
++	'AT' => 'AUSTRIA',
++	'HN' => 'HONDURAS',
++	'AX' => 'ALAND ISLANDS',
++	'WF' => 'WALLIS AND FUTUNA ISLANDS',
++	'JO' => 'JORDAN',
++	'UG' => 'UGANDA',
++	'UY' => 'URUGUAY',
++	'UZ' => 'UZBEKISTAN',
++	'UA' => 'UKRAINE',
++	'IQ' => 'IRAQ',
++	'IR' => 'IRAN',
++	'IL' => 'ISRAEL',
++	'EG' => 'EGYPT',
++	'IT' => 'ITALY',
++	'IN' => 'INDIA',
++	'ID' => 'INDONESIA',
++	'JP' => 'JAPAN',
++	'JM' => 'JAMAICA',
++	'ZM' => 'ZAMBIA',
++	'JE' => 'JERSEY',
++	'GQ' => 'EQUATORIAL GUINEA',
++	'KP' => 'KOREA, DEMOCRATIC PEOPLE\'S REPUBLIC OF',
++	'GE' => 'GEORGIA',
++	'CF' => 'CENTRAL AFRICAN REPUBLIC',
++	'TW' => 'TAIWAN, PROVINCE OF CHINA',
++	'CN' => 'CHINA',
++	'DJ' => 'DJIBOUTI',
++	'GI' => 'GIBRALTAR',
++	'ZW' => 'ZIMBABWE',
++	'TD' => 'CHAD',
++	'CZ' => 'CZECH REPUBLIC',
++	'CL' => 'CHILE',
++	'CM' => 'CAMEROON',
++	'CV' => 'CAPE VERDE',
++	'KZ' => 'KAZAKHSTAN',
++	'QA' => 'QATAR',
++	'KH' => 'CAMBODIA',
++	'CA' => 'CANADA',
++	'KE' => 'KENYA',
++	'KY' => 'CAYMAN ISLANDS',
++	'KM' => 'COMOROS',
++	'CR' => 'COSTA RICA',
++	'CC' => 'COCOS ISLANDS',
++	'CI' => 'COTE D\'IVOIRE',
++	'CO' => 'COLOMBIA',
++	'CG' => 'CONGO',
++	'CD' => 'DEMOCRATIC REPUBLIC OF THE CONGO',
++	'CU' => 'CUBA',
++	'KW' => 'KUWAIT',
++	'CK' => 'COOK ISLANDS',
++	'HR' => 'CROATIA',
++	'CX' => 'CHRISTMAS ISLAND',
++	'KG' => 'KYRGYZSTAN',
++	'KI' => 'KIRIBATI',
++	'CY' => 'CYPRUS',
++	'TH' => 'THAILAND',
++	'TJ' => 'TAJIKISTAN',
++	'TZ' => 'TANZANIA, UNITED REPUBLIC OF',
++	'TC' => 'TURKS AND CAICOS ISLANDS',
++	'TR' => 'TURKEY',
++	'TG' => 'TOGO',
++	'TK' => 'TOKELAU',
++	'TO' => 'TONGA',
++	'TM' => 'TURKMENISTAN',
++	'TV' => 'TUVALU',
++	'TN' => 'TUNISIA',
++	'TT' => 'TRINIDAD AND TOBAGO',
++	'PA' => 'PANAMA',
++	'PY' => 'PARAGUAY',
++	'PK' => 'PAKISTAN',
++	'PG' => 'PAPUA NEW GUINEA',
++	'PW' => 'PALAU',
++	'PS' => 'PALESTINE',
++	'FO' => 'FAROE ISLANDS',
++	'PE' => 'PERU',
++	'PT' => 'PORTUGAL',
++	'FK' => 'FALKLAND ISLANDS',
++	'PL' => 'POLAND',
++	'PR' => 'PUERTO RICO',
++	'FR' => 'FRANCE',
++	'GF' => 'FRENCH GUIANA',
++	'TF' => 'FRENCH SOUTHERN TERRITORIES',
++	'PF' => 'FRENCH POLYNESIA',
++	'FJ' => 'FIJI',
++	'FI' => 'FINLAND',
++	'PH' => 'PHILIPPINES',
++	'PN' => 'PITCAIRN',
++	'HM' => 'HEARD AND MC DONALD ISLANDS',
++	'HU' => 'HUNGARY',
++	'HK' => 'HONG KONG',
++);
+diff -urN consent_org/lib/Logout.php consent/lib/Logout.php
+--- consent_org/lib/Logout.php	2017-07-25 05:42:27.794688429 +0000
++++ consent/lib/Logout.php	2017-07-26 05:35:51.384811397 +0000
+@@ -9,7 +9,7 @@
+ 
+ 	public static function postLogout(SimpleSAML_IdP $idp, array $state) {
+ 		$url = SimpleSAML_Module::getModuleURL('consent/logout_completed.php');
+-		\SimpleSAML\Utils\HTTP::redirectTrustedURL($url);
++		\SimpleSAML\Utils\HTTP::redirectTrustedURL($url, array('logo' => $state['consent:useLogo']));
+ 	}
+ 
+ }
+diff -urN consent_org/templates/consentform.php consent/templates/consentform.php
+--- consent_org/templates/consentform.php	2017-07-25 05:42:27.794688429 +0000
++++ consent/templates/consentform.php	2017-07-26 05:35:51.384811397 +0000
+@@ -1,233 +1,248 @@
+-<?php
+-/**
+- * Template form for giving consent.
+- *
+- * Parameters:
+- * - 'srcMetadata': Metadata/configuration for the source.
+- * - 'dstMetadata': Metadata/configuration for the destination.
+- * - 'yesTarget': Target URL for the yes-button. This URL will receive a POST request.
+- * - 'yesData': Parameters which should be included in the yes-request.
+- * - 'noTarget': Target URL for the no-button. This URL will receive a GET request.
+- * - 'noData': Parameters which should be included in the no-request.
+- * - 'attributes': The attributes which are about to be released.
+- * - 'sppp': URL to the privacy policy of the destination, or FALSE.
+- *
+- * @package SimpleSAMLphp
+- */
+-assert('is_array($this->data["srcMetadata"])');
+-assert('is_array($this->data["dstMetadata"])');
+-assert('is_string($this->data["yesTarget"])');
+-assert('is_array($this->data["yesData"])');
+-assert('is_string($this->data["noTarget"])');
+-assert('is_array($this->data["noData"])');
+-assert('is_array($this->data["attributes"])');
+-assert('is_array($this->data["hiddenAttributes"])');
+-assert('$this->data["sppp"] === false || is_string($this->data["sppp"])');
+-
+-// Parse parameters
+-if (array_key_exists('name', $this->data['srcMetadata'])) {
+-    $srcName = $this->data['srcMetadata']['name'];
+-} elseif (array_key_exists('OrganizationDisplayName', $this->data['srcMetadata'])) {
+-    $srcName = $this->data['srcMetadata']['OrganizationDisplayName'];
+-} else {
+-    $srcName = $this->data['srcMetadata']['entityid'];
+-}
+-
+-if (is_array($srcName)) {
+-    $srcName = $this->t($srcName);
+-}
+-
+-if (array_key_exists('name', $this->data['dstMetadata'])) {
+-    $dstName = $this->data['dstMetadata']['name'];
+-} elseif (array_key_exists('OrganizationDisplayName', $this->data['dstMetadata'])) {
+-    $dstName = $this->data['dstMetadata']['OrganizationDisplayName'];
+-} else {
+-    $dstName = $this->data['dstMetadata']['entityid'];
+-}
+-
+-if (is_array($dstName)) {
+-    $dstName = $this->t($dstName);
+-}
+-
+-$srcName = htmlspecialchars($srcName);
+-$dstName = htmlspecialchars($dstName);
+-
+-$attributes = $this->data['attributes'];
+-
+-$this->data['header'] = $this->t('{consent:consent:consent_header}');
+-$this->data['head']  = '<link rel="stylesheet" type="text/css" href="/' .
+-    $this->data['baseurlpath'] . 'module.php/consent/style.css" />' . "\n";
+-
+-$this->includeAtTemplateBase('includes/header.php');
+-?>
+-<p>
+-<?php
+-echo $this->t(
+-    '{consent:consent:consent_accept}',
+-    array( 'SPNAME' => $dstName, 'IDPNAME' => $srcName)
+-);
+-
+-if (array_key_exists('descr_purpose', $this->data['dstMetadata'])) {
+-    echo '</p><p>' . $this->t(
+-        '{consent:consent:consent_purpose}',
+-        array(
+-            'SPNAME' => $dstName,
+-            'SPDESC' => $this->getTranslation(
+-                SimpleSAML\Utils\Arrays::arrayize(
+-                    $this->data['dstMetadata']['descr_purpose'],
+-                    'en'
+-                )
+-            ),
+-        )
+-    );
+-}
+-?>
+-</p>
+-
+-<form style="display: inline; margin: 0px; padding: 0px"
+-      action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
+-<p style="margin: 1em">
+-
+-<?php
+-if ($this->data['usestorage']) {
+-    $checked = ($this->data['checked'] ? 'checked="checked"' : '');
+-    echo '<input type="checkbox" name="saveconsent" ' . $checked .
+-        ' value="1" /> ' . $this->t('{consent:consent:remember}');
+-}
+-
+-// Embed hidden fields...
+-foreach ($this->data['yesData'] as $name => $value) {
+-    echo '<input type="hidden" name="' . htmlspecialchars($name) .
+-        '" value="' . htmlspecialchars($value) . '" />';
+-}
+-?>
+-    </p>
+-    <button type="submit" name="yes" class="btn" id="yesbutton">
+-        <?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>
+-    </button>
+-</form>
+-
+-<form style="display: inline; margin-left: .5em;" action="<?php echo htmlspecialchars($this->data['noTarget']); ?>"
+-      method="get">
+-
+-<?php
+-foreach ($this->data['noData'] as $name => $value) {
+-    echo('<input type="hidden" name="' . htmlspecialchars($name) .
+-        '" value="' . htmlspecialchars($value) . '" />');
+-}
+-?>
+-    <button type="submit" class="btn" name="no" id="nobutton">
+-        <?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>
+-    </button>
+-</form>
+-
+-<?php
+-if ($this->data['sppp'] !== false) {
+-    echo "<p>" . htmlspecialchars($this->t('{consent:consent:consent_privacypolicy}')) . " ";
+-    echo "<a target='_blank' href='" . htmlspecialchars($this->data['sppp']) . "'>" . $dstName . "</a>";
+-    echo "</p>";
+-}
+-
+-/**
+- * Recursive attribute array listing function
+- *
+- * @param SimpleSAML_XHTML_Template $t          Template object
+- * @param array                     $attributes Attributes to be presented
+- * @param string                    $nameParent Name of parent element
+- *
+- * @return string HTML representation of the attributes 
+- */
+-function present_attributes($t, $attributes, $nameParent)
+-{
+-    $alternate = array('odd', 'even');
+-    $i = 0;
+-    $summary = 'summary="' . $t->t('{consent:consent:table_summary}') . '"';
+-
+-    if (strlen($nameParent) > 0) {
+-        $parentStr = strtolower($nameParent) . '_';
+-        $str = '<table class="attributes" ' . $summary . '>';
+-    } else {
+-        $parentStr = '';
+-        $str = '<table id="table_with_attributes"  class="attributes" '. $summary .'>';
+-        $str .= "\n" . '<caption>' . $t->t('{consent:consent:table_caption}') .
+-            '</caption>';
+-    }
+-
+-    foreach ($attributes as $name => $value) {
+-        $nameraw = $name;
+-        $name = $t->getAttributeTranslation($parentStr . $nameraw);
+-
+-        if (preg_match('/^child_/', $nameraw)) {
+-            // insert child table
+-            $parentName = preg_replace('/^child_/', '', $nameraw);
+-            foreach ($value as $child) {
+-                $str .= "\n" . '<tr class="odd"><td style="padding: 2em">' .
+-                    present_attributes($t, $child, $parentName) . '</td></tr>';
+-            }
+-        } else {
+-            // insert values directly
+-
+-            $str .= "\n" . '<tr class="' . $alternate[($i++ % 2)] .
+-                '"><td><span class="attrname">' . htmlspecialchars($name) . '</span>';
+-
+-            $isHidden = in_array($nameraw, $t->data['hiddenAttributes'], true);
+-            if ($isHidden) {
+-                $hiddenId = SimpleSAML\Utils\Random::generateID();
+-
+-                $str .= '<div class="attrvalue" style="display: none;" id="hidden_' . $hiddenId . '">';
+-            } else {
+-                $str .= '<div class="attrvalue">';
+-            }
+-
+-            if (sizeof($value) > 1) {
+-                // we hawe several values
+-                $str .= '<ul>';
+-                foreach ($value as $listitem) {
+-                    if ($nameraw === 'jpegPhoto') {
+-                        $str .= '<li><img src="data:image/jpeg;base64,' .
+-                            htmlspecialchars($listitem) .
+-                            '" alt="User photo" /></li>';
+-                    } else {
+-                        $str .= '<li>' . htmlspecialchars($listitem) . '</li>';
+-                    }
+-                }
+-                $str .= '</ul>';
+-            } elseif (isset($value[0])) {
+-                // we hawe only one value
+-                if ($nameraw === 'jpegPhoto') {
+-                    $str .= '<img src="data:image/jpeg;base64,' .
+-                        htmlspecialchars($value[0]) .
+-                        '" alt="User photo" />';
+-                } else {
+-                    $str .= htmlspecialchars($value[0]);
+-                }
+-            } // end of if multivalue
+-            $str .= '</div>';
+-
+-            if ($isHidden) {
+-                $str .= '<div class="attrvalue consent_showattribute" id="visible_' . $hiddenId . '">';
+-                $str .= '... ';
+-                $str .= '<a class="consent_showattributelink" href="javascript:SimpleSAML_show(\'hidden_' . $hiddenId;
+-                $str .= '\'); SimpleSAML_hide(\'visible_' . $hiddenId . '\');">';
+-                $str .= $t->t('{consent:consent:show_attribute}');
+-                $str .= '</a>';
+-                $str .= '</div>';
+-            }
+-
+-            $str .= '</td></tr>';
+-        }	// end else: not child table
+-    }	// end foreach
+-    $str .= isset($attributes)? '</table>':'';
+-    return $str;
+-}
+-
+-echo '<h3 id="attributeheader">' .
+-    $this->t(
+-        '{consent:consent:consent_attributes_header}',
+-        array( 'SPNAME' => $dstName, 'IDPNAME' => $srcName)
+-    ) .
+-    '</h3>';
+-
+-echo present_attributes($this, $attributes, '');
+-
+-$this->includeAtTemplateBase('includes/footer.php');
++<?php
++/**
++ * Template form for giving consent.
++ *
++ * Parameters:
++ * - 'srcMetadata': Metadata/configuration for the source.
++ * - 'dstMetadata': Metadata/configuration for the destination.
++ * - 'yesTarget': Target URL for the yes-button. This URL will receive a POST request.
++ * - 'yesData': Parameters which should be included in the yes-request.
++ * - 'noTarget': Target URL for the no-button. This URL will receive a GET request.
++ * - 'noData': Parameters which should be included in the no-request.
++ * - 'attributes': The attributes which are about to be released.
++ * - 'sppp': URL to the privacy policy of the destination, or FALSE.
++ *
++ * @package simpleSAMLphp
++ */
++assert('is_array($this->data["srcMetadata"])');
++assert('is_array($this->data["dstMetadata"])');
++assert('is_string($this->data["yesTarget"])');
++assert('is_array($this->data["yesData"])');
++assert('is_string($this->data["noTarget"])');
++assert('is_array($this->data["noData"])');
++assert('is_array($this->data["attributes"])');
++assert('is_array($this->data["hiddenAttributes"])');
++assert('$this->data["sppp"] === false || is_string($this->data["sppp"])');
++
++
++// Parse parameters
++if (array_key_exists('name', $this->data['srcMetadata'])) {
++    $srcName = $this->data['srcMetadata']['name'];
++} elseif (array_key_exists('OrganizationDisplayName', $this->data['srcMetadata'])) {
++    $srcName = $this->data['srcMetadata']['OrganizationDisplayName'];
++} else {
++    $srcName = $this->data['srcMetadata']['entityid'];
++}
++
++if (is_array($srcName)) {
++    $srcName = $this->t($srcName);
++}
++
++if (array_key_exists('name', $this->data['dstMetadata'])) {
++    $dstName = $this->data['dstMetadata']['name'];
++} elseif (array_key_exists('OrganizationDisplayName', $this->data['dstMetadata'])) {
++    $dstName = $this->data['dstMetadata']['OrganizationDisplayName'];
++} else {
++    $dstName = $this->data['dstMetadata']['entityid'];
++}
++
++if (is_array($dstName)) {
++    $dstName = $this->t($dstName);
++}
++
++$srcName = htmlspecialchars($srcName);
++$dstName = htmlspecialchars($dstName);
++
++$attributes = $this->data['attributes'];
++
++$this->includeAtTemplateBase('consent:includes/header.php');
++
++$dstCountry = '';
++if (!empty($this->data['country'])) {
++	$dstCountry = ' in '.$this->data['country'];
++}
++
++?>
++<div class="login-user">
++	<?php if ($this->data['useLogo'] === true) { ?>
++	<h1><img src="images/logo.gif" alt="logo" /></h1>
++	<?php } ?>
++
++	<div class="box-line">
++		<h2>User Information</h2>
++		<a href="#" class="control open">More detail</a>
++		<div class="contents">
++			<ul class="bul-dot">
++				<?php echo(present_attributes_keys($this, $attributes)); ?>
++			</ul>
++		</div>
++	</div>
++
++	<div class="table" data-ref="detail" style="display:none">
++	<?php echo(present_attributes($this, $attributes, '')); ?>
++	</div>
++
++	<ul class="list">
++		<li>
++			<img src="images/login_user_01.gif" alt="" />
++			<p>
++			<?php
++				echo htmlspecialchars($this->t('{consent:consent:consent_privacypolicy}')) . " ";
++			    echo "<a target='_blank' href='" . htmlspecialchars($this->data['sppp']) . "'>" . $dstName . "</a>";				
++			?>
++			</p>
++		</li>
++		<li>
++			<img src="images/login_user_02.gif" alt="" />
++			<p>
++			<?php
++				echo $this->t('{consent:consent:consent_attributes_header}', array( 'SPNAME' =>  $dstName, 'IDPNAME' => $srcName, 'NATION' => $dstCountry));
++			?>
++			</p>
++		</li>
++		<li>
++			<img src="images/login_user_03.gif" alt="" />
++			<p>
++			<?php
++				echo $this->t('{consent:consent:consent_refuse_right_header}', array( 'SPNAME' => $dstName, 'IDPNAME' => $srcName));
++			?>
++			</p>
++		</li>
++		<!--
++		<li>
++			<img src="images/login_user_04.gif" alt="" />
++			<p>This is an example. This is an example. This is an example.</p>
++		</li>
++		-->
++	</ul>
++	
++	<?php if ($this->data['usestorage']) { ?>
++	<p class="login-ing">
++		<input type="checkbox" id="saveconsent" name="saveconsent" <?php echo $this->data['checked'] ? 'checked="checked"' : ''; ?> value="1" />
++		<label for="saveconsent"><?php echo $this->t('{consent:consent:remember}'); ?></label>
++		<a href="" class="icon-tip">
++			<img src="images/icon_tip.gif" alt="?" />
++			<span>Remember to send it to <?php echo $dstName ?>.</span>
++		</a>
++	</p>
++	<?php } ?>
++	
++	<div class="txt-center">
++		<form action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
++		<?php
++		foreach ($this->data['yesData'] as $name => $value) {
++			echo '<input type="hidden" name="'.htmlspecialchars($name).'" value="'.htmlspecialchars($value).'" />';
++		}
++		?>
++		<input type="submit" class="btn-purple" name="yes"  value="<?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>" />
++		</form>
++
++		<form action="<?php echo htmlspecialchars($this->data['noTarget']); ?>" method="get">
++		<?php
++		foreach ($this->data['noData'] as $name => $value) {
++			echo '<input type="hidden" name="'.htmlspecialchars($name).'" value="'.htmlspecialchars($value).'" />';
++		}
++		?>
++		<input type="submit" class="btn-gray" name="no" value="<?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>" />
++		</form>
++	</div>
++</div>
++
++<?php
++function present_attributes_keys($t, $attributes) 
++{
++	$output = '';
++    foreach ($attributes as $name => $value) {
++        $name = $t->getAttributeTranslation($name);
++		$output .= '<li>'.$name.'</li>'."\n";
++	}
++	return $output;
++}
++
++/**
++ * Recursiv attribute array listing function
++ *
++ * @param SimpleSAML_XHTML_Template $t          Template object
++ * @param array                     $attributes Attributes to be presented
++ * @param string                    $nameParent Name of parent element
++ *
++ * @return string HTML representation of the attributes 
++ */
++function present_attributes($t, $attributes, $nameParent)
++{
++    $summary = 'summary="' . $t->t('{consent:consent:table_summary}') . '"';
++
++    if (strlen($nameParent) > 0) {
++        $parentStr = strtolower($nameParent) . '_';
++        $str = '<table ' . $summary . '><tbody>';
++    } else {
++        $parentStr = '';
++        $str = '<table '. $summary .'>';
++        $str .= "\n" . '<caption>' . $t->t('{consent:consent:table_caption}') . '</caption><tbody>';
++    }
++
++    foreach ($attributes as $name => $value) {
++        $nameraw = $name;
++        $name = $t->getAttributeTranslation($parentStr . $nameraw);
++
++        if (preg_match('/^child_/', $nameraw)) {
++            // Insert child table
++            $parentName = preg_replace('/^child_/', '', $nameraw);
++            foreach ($value AS $child) {
++                $str .= "\n" . '<tr><td style="padding: 2em" colspan="2">'.present_attributes($t, $child, $parentName) . '</td></tr>';
++            }
++        } else {
++            // Insert values directly
++
++            $str .= "\n" . '<tr><th scope="row">' . htmlspecialchars($name) .'</th><td>';
++
++            $isHidden = in_array($nameraw, $t->data['hiddenAttributes'], true);
++            if ($isHidden) {
++                $hiddenId = SimpleSAML_Utilities::generateID();
++                $str .= '<div class="attrvalue" style="display: none;" id="hidden_' . $hiddenId . '">';
++            } else {
++                $str .= '<div class="attrvalue">';
++            }
++
++            if (sizeof($value) > 1) {
++                // We hawe several values
++                $str .= '<ul>';
++                foreach ($value AS $listitem) {
++                    if ($nameraw === 'jpegPhoto') {
++                        $str .= '<li><img src="data:image/jpeg;base64,' .
++                            htmlspecialchars($listitem) .
++                            '" alt="User photo" /></li>';
++                    } else {
++                        $str .= '<li>' . htmlspecialchars($listitem) . '</li>';
++                    }
++                }
++                $str .= '</ul>';
++            } elseif (isset($value[0])) {
++                // We hawe only one value
++                if ($nameraw === 'jpegPhoto') {
++                    $str .= '<img src="data:image/jpeg;base64,' .
++                        htmlspecialchars($value[0]) .
++                        '" alt="User photo" />';
++                } else {
++                    $str .= htmlspecialchars(strip_tags($value[0]));
++                }
++            }   // end of if multivalue
++            $str .= '</div>';
++
++            if ($isHidden) {
++                $str .= '<div class="attrvalue consent_showattribute" id="visible_' . $hiddenId . '">';
++                $str .= '... ';
++                $str .= '<a class="consent_showattributelink" href="javascript:SimpleSAML_show(\'hidden_' . $hiddenId . '\'); SimpleSAML_hide(\'visible_' . $hiddenId . '\');">';
++                $str .= $t->t('{consent:consent:show_attribute}');
++                $str .= '</a>';
++                $str .= '</div>';
++            }
++
++            $str .= '</td></tr>';
++        }       // end else: not child table
++    }   // end foreach
++    $str .= isset($attributes)? '</tbody></table>':'';
++    return $str;
++}
++
++$this->includeAtTemplateBase('consent:includes/footer.php');
+diff -urN consent_org/templates/includes/footer.php consent/templates/includes/footer.php
+--- consent_org/templates/includes/footer.php	1970-01-01 00:00:00.000000000 +0000
++++ consent/templates/includes/footer.php	2017-07-26 05:35:51.385811406 +0000
+@@ -0,0 +1,43 @@
++			</div>
++		</div>
++		<!-- //container-body -->
++	</div>
++</div>
++<!-- //layout-container -->
++
++<!-- layout-footer -->
++<div id="layout-footer">
++	<div id="footer">
++		<p class="kafe">
++			<img src="images/kafe.png" alt="KAFE" />
++			Korean Access FEderation
++		</p>
++
++		<ul id="fnb">
++			<li><a href="https://coreen.kreonet.net/user_agreement" target="_blank">PRIVACY POLICY</a></li>
++			<li><a href="https://coreen.kreonet.net/privacy_policy" target="_blank">TERMS OF USE</a></li>
++		</ul>
++	</div>
++</div>
++<!-- //layout-footer -->
++
++<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
++<script>
++$(function() {
++	$('.control').click(function(e) {
++		e.preventDefault();
++		var $t = $(this);
++		var $detail = $('[data-ref=detail]');
++		if ($t.hasClass('open')) {
++			$t.removeClass('open');
++			$detail.slideDown();
++		} else {
++			$t.addClass('open');
++			$detail.slideUp();
++		}
++	});
++});
++</script>
++
++</body>
++</html>
+diff -urN consent_org/templates/includes/header.php consent/templates/includes/header.php
+--- consent_org/templates/includes/header.php	1970-01-01 00:00:00.000000000 +0000
++++ consent/templates/includes/header.php	2017-07-26 05:35:51.385811406 +0000
+@@ -0,0 +1,37 @@
++<?php
++if (array_key_exists('name', $this->data['dstMetadata'])) {
++    $dstName = $this->data['dstMetadata']['name'];
++} elseif (array_key_exists('OrganizationDisplayName', $this->data['dstMetadata'])) {
++    $dstName = $this->data['dstMetadata']['OrganizationDisplayName'];
++} else {
++    $dstName = $this->data['dstMetadata']['entityid'];
++}
++
++if (is_array($dstName)) {
++    $dstName = $this->t($dstName);
++}
++
++$dstName = htmlspecialchars($dstName);
++
++if (empty($dstName)) {
++	$title = 'LOGOUT';
++} else {
++	$title = 'LOGIN to '.$dstName;
++}
++?>
++<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
++<html xmlns="http://www.w3.org/1999/xhtml" lang="ko" xml:lang="ko">
++<head>
++<title><?php echo $title; ?></title>
++<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
++<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
++<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
++<link type="text/css" rel="stylesheet" href="css/default.css" />
++</head>
++<body>
++<!-- layout-container -->
++<div id="layout-container" <?php echo empty($this->data['short']) ? '' : 'class="short"'; ?>>
++	<div id="container">
++		<!-- container-body -->
++		<div id="container-body">
++			<div id="contents">
+diff -urN consent_org/templates/logout_completed.php consent/templates/logout_completed.php
+--- consent_org/templates/logout_completed.php	2017-07-25 05:42:27.794688429 +0000
++++ consent/templates/logout_completed.php	2017-07-26 05:35:51.385811406 +0000
+@@ -1,9 +1,21 @@
+-<?php
+-
+-$this->data['header'] = $this->t('{logout:title}');
+-$this->includeAtTemplateBase('includes/header.php');
+-
+-echo('<h2>' . $this->data['header'] . '</h2>');
+-echo('<p>' . $this->t('{logout:logged_out_text}') . '</p>');
+-
+-$this->includeAtTemplateBase('includes/footer.php');
++<?php
++	$this->data['short'] = true;
++	$this->includeAtTemplateBase('consent:includes/header.php');
++?>
++<div class="box-kreonet">
++	<?php if ($this->data['useLogo'] === true) { ?>
++	<p class="img">
++		<img src="images/logo.gif" alt="logo" />
++	</p>
++	<?php } ?>
++
++	<div class="icon-ment">
++		<span class="icon">
++			<img src="images/icon_noconsent.png" alt="icon" />
++		</span>
++		<strong><?php echo $this->t('{logout:title}'); ?></strong>
++		<p><?php echo $this->t('{logout:logged_out_text}'); ?></p>
++	</div>
++</div>
++<?php
++	$this->includeAtTemplateBase('consent:includes/footer.php');
+diff -urN consent_org/templates/noconsent.php consent/templates/noconsent.php
+--- consent_org/templates/noconsent.php	2017-07-25 05:42:27.794688429 +0000
++++ consent/templates/noconsent.php	2017-07-26 05:35:51.385811406 +0000
+@@ -1,38 +1,48 @@
+-<?php
+-
+-if (array_key_exists('name', $this->data['dstMetadata'])) {
+-    $dstName = $this->data['dstMetadata']['name'];
+-} elseif (array_key_exists('OrganizationDisplayName', $this->data['dstMetadata'])) {
+-    $dstName = $this->data['dstMetadata']['OrganizationDisplayName'];
+-} else {
+-    $dstName = $this->data['dstMetadata']['entityid'];
+-}
+-if (is_array($dstName)) {
+-    $dstName = $this->t($dstName);
+-}
+-$dstName = htmlspecialchars($dstName);
+-
+-
+-$this->data['header'] = $this->t('{consent:consent:noconsent_title}');;
+-
+-$this->includeAtTemplateBase('includes/header.php');
+-
+-echo '<h2>' . $this->data['header'] . '</h2>';
+-echo '<p>' . $this->t('{consent:consent:noconsent_text}', array('SPNAME' => $dstName)) . '</p>';
+-
+-if ($this->data['resumeFrom']) {
+-    echo('<p><a href="' . htmlspecialchars($this->data['resumeFrom']) . '">');
+-    echo($this->t('{consent:consent:noconsent_return}'));
+-    echo('</a></p>');
+-}
+-
+-if ($this->data['aboutService']) {
+-    echo('<p><a href="' . htmlspecialchars($this->data['aboutService']) . '">');
+-    echo($this->t('{consent:consent:noconsent_goto_about}'));
+-    echo('</a></p>');
+-}
+-
+-echo('<p><a href="' . htmlspecialchars($this->data['logoutLink']) . '">' . $this->t('{consent:consent:abort}', array('SPNAME' => $dstName)) . '</a></p>');
+-
+-
+-$this->includeAtTemplateBase('includes/footer.php');
++<?php
++if (array_key_exists('name', $this->data['dstMetadata'])) {
++    $dstName = $this->data['dstMetadata']['name'];
++} elseif (array_key_exists('OrganizationDisplayName', $this->data['dstMetadata'])) {
++    $dstName = $this->data['dstMetadata']['OrganizationDisplayName'];
++} else {
++    $dstName = $this->data['dstMetadata']['entityid'];
++}
++if (is_array($dstName)) {
++    $dstName = $this->t($dstName);
++}
++$dstName = htmlspecialchars($dstName);
++
++$this->includeAtTemplateBase('consent:includes/header.php');
++?>
++	<div class="box-kreonet">
++		<?php if ($this->data['useLogo'] === true) { ?>
++		<p class="img">
++			<img src="images/logo.gif" alt="logo" />
++		</p>
++		<?php } ?>
++
++		<!-- logout No consent -->
++		<div class="icon-ment">
++			<span class="icon">
++				<img src="images/icon_noconsent.png" alt="icon" />
++			</span>
++			<strong><?php echo $this->t('{consent:consent:noconsent_title}'); ?></strong>
++			<p><?php echo $this->t('{consent:consent:noconsent_text}', array('SPNAME' => $dstName)); ?></p>
++		</div>
++		<!-- //logout No consent -->
++	</div>
++
++	<p class="btn-area">
++		<?php if ($this->data['resumeFrom']) { ?>
++		<a href="<?php echo htmlspecialchars($this->data['resumeFrom']) ?>" class="btn-purple"><?php echo $this->t('{consent:consent:noconsent_return}') ?></a>
++		<?php } ?>
++
++		<?php if ($this->data['aboutService']) { ?>
++		<a href="<?php echo htmlspecialchars($this->data['aboutService']) ?>" class="btn-navylight"><?php echo $this->t('{consent:consent:noconsent_goto_about}') ?></a>
++		<?php } ?>
++
++		<a href="<?php echo htmlspecialchars($this->data['logoutLink']) ?>" class="btn-gray"><?php echo $this->t('{consent:consent:abort}', array('SPNAME' => $dstName)) ?></a>
++	</p>
++</div>
++
++<?php
++$this->includeAtTemplateBase('consent:includes/footer.php');
+diff -urN consent_org/www/css/default.css consent/www/css/default.css
+--- consent_org/www/css/default.css	1970-01-01 00:00:00.000000000 +0000
++++ consent/www/css/default.css	2017-07-26 05:35:51.365811353 +0000
+@@ -0,0 +1,322 @@
++@charset "utf-8";
++
++/*----------------------------------------------------------------------------
++ * owncloud.css
++ * ---------------------------------------------------------------------------
++ * Author	: (주)플랜아이 http://plani.co.kr
++ * ---------------------------------------------------------------------------
++ * History
++ * ---------------------------------------------------------------------------
++ * 2017-07-17 (조민지)	: 최초작성
++ * -------------------------------------------------------------------------*/
++
++@font-face 
++{
++	font-family:'noto';
++	src:url('../font/noto_kr_r.eot');
++	src:url('../font/noto_kr_r.eot?#iefix') format('embedded-opentype'), 
++        url('../font/noto_kr_r.woff') format('woff'), 
++		url('../font/noto_kr_r.ttf') format('truetype');
++}
++
++@font-face 
++{
++	font-family:'noto';
++	font-weight:bold;
++	src:url('../font/noto_kr_b.eot');
++	src:url('../font/noto_kr_b.eot?#iefix') format('embedded-opentype'), 
++        url('../font/noto_kr_b.woff') format('woff'), 
++		url('../font/noto_kr_b.ttf') format('truetype');
++}
++
++@font-face 
++{
++	font-family:'noto';
++	font-weight:200;
++	src:url('../font/noto_kr_l.eot');
++	src:url('../font/noto_kr_l.eot?#iefix') format('embedded-opentype'), 
++        url('../font/noto_kr_l.woff') format('woff'), 
++		url('../font/noto_kr_l.ttf') format('truetype');
++}
++
++html, body {margin:0; padding:0;}
++body {background:url('../images/bg.gif') no-repeat center 0; background-size:auto 100%; font-family:'noto', '맑은 고딕', 'Malgun Gothic', '돋움', 'Dotum', '굴림', 'Gulim', AppleGothic, UnDotum, Arial, Tahoma, Verdana, sans-serif; font-size:13px; color:#666; line-height:21px;}
++h1, h2, h3, h4, h5, h6 {margin:0; padding:0; color:#000; line-height:100%;}
++a {color:#666;}
++form {display:inline;}
++caption {overflow:hidden; position:absolute; left:0; top:0; width:0; height:0; margin:0; padding:0; font-size:0; line-height:0; text-indent:-9999px;}
++img {border:none;}
++fieldset {margin:0; padding:0; border:none;}
++select, input {font-family:'noto', '맑은 고딕', 'Malgun Gothic', '돋움', 'Dotum', '굴림', 'Gulim', AppleGothic, UnDotum, Arial, Tahoma, Verdana, sans-serif; font-size:13px; color:#444;}
++.hidden {overflow:hidden; width:0; height:0; margin:0; padding:0; font-size:0; line-height:0;}
++
++/* layout-container */
++#layout-container {padding:130px 0 100px; text-align:center;}
++#layout-container #container {width:1200px; max-width:90%; margin:0 auto; padding:50px; box-sizing:border-box; box-shadow:0 2px 1px #c9c9c9; background-color:#fff; text-align:left;}
++#layout-container.short {padding:300px 0 250px;}
++#layout-container.short #container {padding-top:90px; padding-bottom:90px;}
++#layout-container.mid {padding:240px 0 210px;}
++
++/* login-ing */
++.login-ing {text-align:left;}
++.login-ing input,
++.login-ing img {vertical-align:middle;}
++.login-ing label {margin:0 5px; font-size:1.153em; color:#2b2b2b; vertical-align:middle;}
++
++/* icon-tip */
++.icon-tip {position:relative;}
++.icon-tip:hover span,
++.icon-tip:focus span,
++.icon-tip:active span {display:block;}
++.icon-tip span {display:none; position:absolute; left:30px; top:-5px; padding:5px 10px; border:1px solid #e8e8e8; background-color:#f3f3f3; font-size:1.076em; white-space:nowrap;}
++.icon-tip span:before {position:absolute; left:-5px; top:50%; width:6px; height:9px; margin-top:-4px; background:url('../images/tip_arr.gif') no-repeat; content:'';}
++
++/* title */
++.title-line {position:relative; margin:40px 0 15px; padding-top:15px; font-size:1.538em; color:#2b2b2b;}
++.title-line:before {position:absolute; left:0; top:0; width:20px; height:1px; background-color:#000; content:'';}
++.title-txt {margin:40px 0 15px; font-size:2.307em; color:#333;}
++.title-txt:first-child {margin-top:0;}
++.title-txt + p {font-size:1.230em;}
++
++/* account-list */
++.account-list {margin:0; padding:0; list-style:none;}
++.account-list a {display:block; position:relative; margin-top:10px; padding:0 50px 0 25px; border-radius:5px; border:1px solid #e8e8e8; text-decoration:none;}
++.account-list .subject {position:relative; padding:0 0 0 125px; font-size:1.230em; font-weight:200; color:#2b2b2b;}
++.account-list .subject img {position:absolute; left:0; top:auto; margin-top:2px; max-height:20px;}
++.account-list .icon {position:absolute; right:25px; top:50%; height:20px; margin-top:-10px; line-height:20px;}
++.account-list .icon img {vertical-align:middle;}
++.account-list .on a {border-color:#5862aa; background-color:#5862aa;}
++.account-list .on .subject {color:#fff;}
++
++/* box */
++.box-kreonet {position:relative; padding-left:400px;}
++.box-kreonet + .box-blue {margin-top:40px;}
++.box-kreonet .img {position:absolute; left:0; top:0; width:315px; margin:0; text-align:center;}
++.box-kreonet .img:after {display:block; height:20px; }
++.box-blue {position:relative; padding:20px 30px; background-color:#f3f4f9;}
++.box-blue h2 {position:absolute; left:40px; top:35px; font-size:1.384em; color:#333;}
++.box-blue > p:first-child {margin:0; padding:0; font-size:1.230em; font-weight:200; color:#333;}
++.box-blue > p:first-child + p {font-size:1.230em; font-weight:200;}
++.box-blue > p:last-child {margin-bottom:0;}
++.box-blue p strong {font-size:1.125em; font-weight:bold; color:#333;}
++.box-blue .content {margin:5px 0 5px 175px; padding-left:35px; border-left:1px solid #a8a8a8; font-size:1.153em; font-weight:200; color:#333; line-height:1.4;}
++.box-blue .bul-dot {margin-bottom:-5px;}
++.box-blue .bul-dot + p {margin-top:30px; font-size:1.230em; font-weight:200;}
++.box-blue + .newuser {margin-top:45px;}
++.box-blue + .icon-wrong {margin:30px 0 40px;}
++.box-line {position:relative; padding:15px 25px; border:1px solid #d8d8d8;}
++.box-line h2 {font-size:1.846em; color:#333;}
++.box-line h2 + .control + .bul-dot {margin-top:10px;}
++.box-line .control {position:absolute; right:20px; top:12px; padding-right:40px; font-size:1.230em; font-weight:200; color:#333; text-decoration:none; line-height:27px;}
++.box-line .control:before {position:absolute; right:0; top:0; width:27px; height:27px; background:url('../images/icon_more.gif') no-repeat; content:'';}
++.box-line .control.open:before {transform:rotate(180deg);}
++
++/* bul-dot */
++.bul-dot {margin:18px 0 0; padding:0; list-style:none;}
++.bul-dot li {position:relative; margin:8px 0; padding-left:15px; font-size:1.230em; font-weight:200;}
++.bul-dot li strong {font-weight:bold; color:#333;}
++.bul-dot li:before {position:absolute; left:0; top:9px; width:3px; height:3px; background-color:#4b4b4b; content:'';}
++
++/* login-form */
++.login-form ul {margin:0; padding:0; list-style:none;}
++.login-form input {width:100%; height:60px; padding-left:12px; box-sizing:border-box; border:0 none; border-bottom:1px solid #7c7c7c; font-size:1.230em; font-weight:200; color:#2b2b2b;}
++.login-form .img {top:20%;}
++.login-form .btn-purple {min-width:0; width:100%; height:50px; font-weight:200; color:#fff;}
++
++/* newuser */
++.newuser {margin:0 -50px -20px; padding-top:25px; border-top:1px solid #dbdbdb; font-size:1.153em; font-weight:200; color:#2b2b2b; text-align:center;}
++.newuser a {color:#ff4646;}
++.newuser span {white-space:nowrap;}
++
++/* icon */
++.icon-wrong {padding-left:95px; background:url('../images/icon_wrong.gif') no-repeat 25px center; font-size:1.153em; font-weight:200; color:#333;}
++.icon-error {padding-left:30px; background:url('../images/icon_error.png') no-repeat 0 center;}
++
++/* icon-ment */
++.icon-ment {position:relative; min-height:80px; margin:0; padding-left:95px; color:#333;}
++.icon-ment .icon {position:absolute; left:0; top:0;}
++.icon-ment strong {font-size:2.307em; line-height:1.3;}
++.icon-ment p {font-size:1.230em;}
++.icon-ment + .box-blue {margin-top:35px;}
++#contents > .icon-ment:first-child {margin:50px 0; padding-left:0; text-align:center;}
++#contents > .icon-ment:first-child .icon {display:block; margin-bottom:35px; position:relative;}
++
++/* btn */
++.btn-area {margin-top:60px; padding-top:40px; border-top:1px dashed #d2d2d2; text-align:center;}
++.btn-area > strong:first-child {display:block; margin-bottom:35px; font-size:1.538em; color:#333;}
++.btn-purple {display:inline-block; min-width:200px; height:50px; padding:0 40px; border:0 none; background-color:#5862aa; font-size:1.384em; font-weight:bold; color:#fff; text-align:center; text-decoration:none; line-height:50px; vertical-align:top;}
++.btn-gray {display:inline-block; min-width:200px; height:50px; padding:0 40px; border:0 none; background-color:#5a5a5a; font-size:1.384em; font-weight:bold; color:#fff; text-align:center; text-decoration:none; line-height:50px; vertical-align:top;}
++input.btn-purple,
++input.btn-gray {width:280px;}
++
++/* email-form */
++.email-form {position:relative; margin-top:20px; padding-left:125px;}
++.email-form label {position:absolute; left:0; top:auto; font-size:1.230em;line-height:35px;}
++.email-form input {width:70%; height:35px; border:1px solid #d7d7d7;}
++
++/* txt-center */
++.txt-center {text-align:center;}
++.txt-center form {display:inline;}
++
++/* login-user */
++.login-user h1 {margin-bottom:30px; text-align:center;}
++.login-user h1 img {height:65px;}
++.login-user .bul-dot {overflow:hidden;}
++.login-user .bul-dot li {float:left; width:33.333%; margin:0; box-sizing:border-box; font-size:1.153em;}
++.login-user .list {display:table; width:100%; margin:40px 0 0; padding:0; list-style:none; table-layout:fixed;}
++.login-user .list li {display:table-cell; padding:0 2.5%; text-align:center;}
++.login-user .list p {margin-top:20px; font-size:1.153em; font-weight:200;}
++.login-user .login-ing {width:570px; max-width:100%; margin:35px auto 20px;}
++
++/* table */
++.table {margin-top:20px; border-top:1px solid #4e4e4e;}
++.table table {border-collapse:collapse; width:100%}
++.table th {padding:10px 20px; border-bottom:1px solid #e8e8e8; font-size:1.230em; font-weight:bold; color:#2b2b2b; text-align:left; width:33%}
++.table td {padding:10px 20px; border-bottom:1px solid #e8e8e8; border-left:1px solid #e8e8e8; font-size:1.230em; font-weight:200; color:#2b2b2b; text-align:left; }
++
++/* login-otp */
++.login-otp {padding-left:395px; background:url('../images/login_otp.gif') no-repeat 90px center;}
++.login-otp strong {display:block; font-size:2em; color:#333; line-height:1.2;}
++.login-otp strong + input {margin:40px 0 15px;}
++.login-otp + .box-blue {margin-top:55px; font-size:1.153em; font-weight:200; color:#333; text-align:center;}
++.login-otp + .box-blue .icon-error {margin-right:5px; font-size:1.2em; font-weight:bold;}
++
++/* footer */
++#layout-footer {padding:25px 0 50px; background-color:#fff; text-align:center;}
++#footer {position:relative; width:1200px; max-width:95%; margin:0 auto; text-align:left;}
++
++/* copyright */
++#copyright {margin:0; padding:0 20px; font-size:1.076em; font-weight:200; text-align:center;}
++#copyright + #fnb {position:relative; padding:0 20px; font-size:1.076em; font-weight:200; text-align:center;}
++
++/* fnb */
++#fnb {position:absolute; right:0; top:0; margin:0; padding:0; text-align:right; list-style:none;}
++#fnb li {display:inline; margin-right:15px; font-size:1.076em;}
++#fnb a {position:relative; z-index:0; font-weight:bold; text-decoration:none; white-space:nowrap;}
++#fnb a:before {position:absolute; left:0; bottom:0; z-index:-1; width:100%; height:8px; background-color:#cdd1ec; content:'';}
++
++.kafe {margin:0; padding:0; font-size:1.153em; color:#969696;}
++.kafe img {margin-right:15px; vertical-align:middle;}
++
++@media screen and (max-width:1024px)
++{
++	/* box */
++	.box-kreonet {padding-left:300px;}
++	.box-kreonet .img {width:250px;}
++
++	/* login-form */
++	.login-form {background-position:35px center;}
++
++	/* icon-ment */
++	.icon-ment {margin-top:20px; padding:0; text-align:center;}
++	.icon-ment .icon {display:block; position:relative; margin-bottom:15px;}
++	.icon-ment + .box-blue {margin-top:20px;}
++
++	/* login-user */
++	.login-user .bul-dot li {width:50%;}
++
++	/* login-otp */
++	.login-otp {padding-left:260px;}
++}
++
++@media screen and (max-width:768px)
++{
++	/* header */
++	#layout-header {padding-top:30px;}
++	#logo + .why {position:relative;}
++
++	/* layout-container */
++	body > #layout-container:first-child {padding:30px 0;}
++	#layout-container {padding-bottom:30px;}
++	#container {padding:20px 30px 30px;}
++
++	/* account-list */
++	.account-list a {padding-left:15px;}
++	.account-list .icon {right:15px;}
++	.account-list .subject {padding-left:0;}
++	.account-list .subject img {display:block; position:relative; margin:0 0 5px;}
++
++	/* box */
++	.box-kreonet {padding-left:0;}
++	.box-kreonet .img {display:block; position:relative; width:100%;}
++	.box-kreonet + .box-blue {margin-top:30px;}
++	.box-blue {padding:20px;}
++	.box-blue h2 {position:relative; left:0; top:0;}
++	.box-blue .content {margin:15px 0 0; padding:20px 0 0; border:0 none; border-top:1px solid #a8a8a8;}
++	.box-line .control {width:40px; height:40px; font-size:0; line-height:0;}
++
++	/* login-form */
++	.login-form .btn {margin-top:20px;}
++
++	/* newuser */
++	.newuser {margin:30px -30px -5px;}
++
++	/* icon-wrong */
++	.icon-wrong {padding:60px 0 0; background-position:center 0; text-align:center;}
++
++	/* icon-tip */
++	.icon-tip span {width:150px; z-index:1; white-space:normal; word-break:keep-all;} 
++
++	/* btn */
++	.btn-area {margin-top:30px; padding-top:20px;}
++	.btn-area strong {margin-bottom:20px;}
++	.btn-area a {display:block; margin-top:10px;}
++
++	/* login-user */
++	.login-user .bul-dot li {width:100%;}
++	.login-user .list {margin:10px 0 0;}
++	.login-user .list li {float:left; width:45%; margin-top:20px;}
++	.login-user .list li:nth-child(3) {clear:both;}
++	.login-user .list p {margin-top:10px;}
++	.login-user .txt-center a {display:block; width:100%; margin-top:10px; box-sizing:border-box;}
++
++	/* table */
++	.table {overflow-x:auto;}
++	.table th,
++	.table td {clear:both; float:left; width:100%; box-sizing:border-box; border-left:0 none;}
++
++	/* login-otp */
++	.login-otp {padding:180px 0 0; background-position:center 0; text-align:center;}
++	.login-otp strong + input {margin:10px 0;}
++	.login-otp + .box-blue {margin-top:20px;}
++	.login-otp + .box-blue span {display:block;}
++
++	/* */
++	.login-ing + .txt-center {margin-top:-10px;}
++	.login-ing + .txt-center input,
++	.login-ing + .txt-center a {margin-top:10px;}
++
++	/* footer */
++	#layout-footer {padding:20px 0 30px;}
++	#footer {text-align:center;}
++	#fnb {position:relative; text-align:center;}
++}
++
++@media screen and (max-width:450px)
++{
++	body {font-size:11px;}
++
++	/* layout-container */
++	#layout-container #container,
++	#container {padding:20px;}
++
++	/* searchform */
++	.searchform + .login-ing {margin-top:20px;}
++
++	/* title */
++	.title-line {margin:20px 0 10px;}
++
++	/* newuser */
++	.newuser {margin:0 -20px; padding:20px 20px 0;}
++
++	/* box */
++	.box-blue + .newuser {margin-top:20px;}
++	.box-blue + .icon-wrong {margin:20px 0 30px;}
++	.box-line h2 {font-size:1.7em;}
++	
++	/* login-user */
++	.login-user .list li {width:95%; margin-top:10px;}
++
++	/* icon-tip */
++	.icon-tip span {width:95px;}
++}
+\ No newline at end of file
+Binary files consent_org/www/font/noto_kr_b.eot and consent/www/font/noto_kr_b.eot differ
+Binary files consent_org/www/font/noto_kr_b.woff and consent/www/font/noto_kr_b.woff differ
+Binary files consent_org/www/font/noto_kr_l.eot and consent/www/font/noto_kr_l.eot differ
+Binary files consent_org/www/font/noto_kr_l.woff and consent/www/font/noto_kr_l.woff differ
+Binary files consent_org/www/font/noto_kr_m.eot and consent/www/font/noto_kr_m.eot differ
+Binary files consent_org/www/font/noto_kr_m.woff and consent/www/font/noto_kr_m.woff differ
+Binary files consent_org/www/font/noto_kr_r.eot and consent/www/font/noto_kr_r.eot differ
+Binary files consent_org/www/font/noto_kr_r.ttf and consent/www/font/noto_kr_r.ttf differ
+Binary files consent_org/www/font/noto_kr_r.woff and consent/www/font/noto_kr_r.woff differ
+diff -urN consent_org/www/getconsent.php consent/www/getconsent.php
+--- consent_org/www/getconsent.php	2017-07-25 05:42:27.793688380 +0000
++++ consent/www/getconsent.php	2017-07-26 05:35:51.365811353 +0000
+@@ -108,6 +108,7 @@
+ $t->data['noData'] = array('StateId' => $id);
+ $t->data['attributes'] = $attributes;
+ $t->data['checked'] = $state['consent:checked'];
++$t->data['useLogo'] = $state['consent:useLogo'];
+ 
+ // Fetch privacypolicy
+ if (array_key_exists('privacypolicy', $state['Destination'])) {
+@@ -117,6 +118,43 @@
+ } else {
+     $privacypolicy = false;
+ }
++
++// Fetch PrivacyStatement
++if (array_key_exists('UIInfo', $state['Destination'])) {
++        if(array_key_exists('PrivacyStatementURL', $state['Destination']['UIInfo'])){
++                if(array_key_exists('en', $state['Destination']['UIInfo']['PrivacyStatementURL'])){
++                        $privacypolicy =  $state['Destination']['UIInfo']['PrivacyStatementURL']['en'];
++                }else{
++                        $newidx = 0;
++                        foreach($state['Destination']['UIInfo']['PrivacyStatementURL'] as $key =>$val)
++                        {
++                                unset($state['Destination']['UIInfo']['PrivacyStatementURL'][$key]);
++                                $new_key =$newidx;
++                                $state['Destination']['UIInfo']['PrivacyStatementURL'][$new_key] = $val;
++                                $newidx++;
++                        }
++                        $privacypolicy =  $state['Destination']['UIInfo']['PrivacyStatementURL'][0];
++                }
++        }
++} elseif (array_key_exists('UIInfo', $state['Source'])) {
++         if(array_key_exists('PrivacyStatementURL', $state['Source']['UIInfo'])){
++                if(array_key_exists('en', $state['Source']['UIInfo']['PrivacyStatementURL'])){
++                        $privacypolicy =  $state['Source']['UIInfo']['PrivacyStatementURL']['en'];
++                }else{
++
++                         $newidx = 0;
++                        foreach($state['Destination']['UIInfo']['PrivacyStatementURL'] as $key =>$val)
++                        {
++                                unset($state['Destination']['UIInfo']['PrivacyStatementURL'][$key]);
++                                $new_key =$newidx;
++                                $state['Destination']['UIInfo']['PrivacyStatementURL'][$new_key] = $val;
++                                $newidx++;
++                        }
++                        $privacypolicy =  $state['Source']['UIInfo']['PrivacyStatementURL'][0];
++                }
++        }
++}
++
+ if ($privacypolicy !== false) {
+     $privacypolicy = str_replace(
+         '%SPENTITYID%',
+@@ -151,4 +189,25 @@
+     $t->data['hiddenAttributes'] = array();
+ }
+ 
++include_once dirname(dirname(__FILE__)) . '/lib/Config.php';
++			 	
++// SP 국가정보 가져오기
++$t->data['country'] = '';
++if (isset($state['SPMetadata']['EntityAttributes']['http://kafe.kreonet.net/jurisdiction'][0])) {
++    $t->data['country'] = implode(',' ,$state['SPMetadata']['EntityAttributes']['http://kafe.kreonet.net/jurisdiction']);
++    $t->data['country'] = $NATION[$t->data['country']];
++}
++			
++// RegistrationAuthority 를 이용한다고 설정되었을 경우
++if (empty($t->data['country']) && 
++       isset($state['consent:useRegistrationAuthority']) && 
++    $state['consent:useRegistrationAuthority'] === true && 
++    isset($state['SPMetadata']['registrationInfo']['registrationAuthority'])) {
++    $t->data['country'] = $state['SPMetadata']['registrationInfo']['registrationAuthority'];
++    $sp_aa = trim(trim($t->data['country']), '/');
++    if (isset($AA[$sp_aa])) {
++    	$t->data['country'] = $NATION[$AA[$sp_aa]];
++}
++			 }
++
+ $t->show();
+Binary files consent_org/www/images/bg.gif and consent/www/images/bg.gif differ
+Binary files consent_org/www/images/icon_more.gif and consent/www/images/icon_more.gif differ
+Binary files consent_org/www/images/icon_noconsent.png and consent/www/images/icon_noconsent.png differ
+Binary files consent_org/www/images/icon_tip.gif and consent/www/images/icon_tip.gif differ
+Binary files consent_org/www/images/kafe.png and consent/www/images/kafe.png differ
+Binary files consent_org/www/images/login_user_01.gif and consent/www/images/login_user_01.gif differ
+Binary files consent_org/www/images/login_user_02.gif and consent/www/images/login_user_02.gif differ
+Binary files consent_org/www/images/login_user_03.gif and consent/www/images/login_user_03.gif differ
+Binary files consent_org/www/images/login_user_04.gif and consent/www/images/login_user_04.gif differ
+Binary files consent_org/www/images/logo.gif and consent/www/images/logo.gif differ
+Binary files consent_org/www/images/tip_arr.gif and consent/www/images/tip_arr.gif differ
+diff -urN consent_org/www/logout_completed.php consent/www/logout_completed.php
+--- consent_org/www/logout_completed.php	2017-07-25 05:42:27.793688380 +0000
++++ consent/www/logout_completed.php	2017-07-26 05:35:51.337810796 +0000
+@@ -7,4 +7,5 @@
+ 
+ $globalConfig = SimpleSAML_Configuration::getInstance();
+ $t = new SimpleSAML_XHTML_Template($globalConfig, 'consent:logout_completed.php');
++$t->data['useLogo'] = empty($_REQUEST['logo']) ? false : true;
+ $t->show();
+diff -urN consent_org/www/noconsent.php consent/www/noconsent.php
+--- consent_org/www/noconsent.php	2017-07-25 05:42:27.793688380 +0000
++++ consent/www/noconsent.php	2017-07-26 05:35:51.383811390 +0000
+@@ -44,4 +44,5 @@
+ $t->data['resumeFrom'] = $resumeFrom;
+ $t->data['aboutService'] = $aboutService;
+ $t->data['logoutLink'] = $logoutLink;
++$t->data['useLogo'] = $state['consent:useLogo'];
+ $t->show();
