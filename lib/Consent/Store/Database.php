@@ -44,12 +44,6 @@ class sspmod_consent_Consent_Store_Database extends sspmod_consent_Store
     private $_table;
 
     /**
-     * Table with consent handler.
-     */
-
-    private $_handler;
-
-    /**
      * The timeout of the database connection.
      *
      * @var int|NULL
@@ -112,17 +106,6 @@ class sspmod_consent_Consent_Store_Database extends sspmod_consent_Store
             $this->_table = $config['table'];
         } else {
             $this->_table = 'consent';
-        }
-
-        if (array_key_exists('handler', $config)) {
-            if (!is_string($config['handler'])) {
-                throw new Exception(
-                    'consent:Database - \'handler\' is supposed to be a string.'
-                );
-            }
-            $this->_handler = $config['handler'];
-        } else {
-            $this->_handler = 'handler';
         }
 
         if (isset($config['timeout'])) {
@@ -344,28 +327,6 @@ class sspmod_consent_Consent_Store_Database extends sspmod_consent_Store
         return $ret;
     }
 
-    public function getHandler($hubId)
-    {
-        assert('is_string($hubId)');
-
-        $st = $this->_execute(
-            'SELECT idp_entity ' .
-            'FROM ' . $this->_handler . ' ' .
-            'WHERE sp_entity = ?',
-            array($hubId)
-        );
-
-        if ($st === false) {
-            return array();
-        }
-
-        while ($row = $st->fetch(PDO::FETCH_NUM)) {
-            $ret[] = $row;
-        }
-
-        return $ret;
-    }
-
     /**
      * Prepare and execute statement.
      *
@@ -560,6 +521,6 @@ class sspmod_consent_Consent_Store_Database extends sspmod_consent_Store
             return FALSE;
         }
 
-    return TRUE;
+	return TRUE;
     }
 }

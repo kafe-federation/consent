@@ -18,136 +18,47 @@
  * so this is just to make sure.
  */
 
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+$db = SimpleSAML_Database::getInstance();
+$kafeConfig = array();
+$stmt = $db->read("SELECT * FROM system_config WHERE config_key='config_consent_log'");
+while ($row = $stmt->fetch()) {
+    if($row['config_key'] == "config_consent_log") {
+        $kafeConfig = json_decode($row['config_value'], true);
+    }
+}
+
+foreach ($kafeConfig as $key => $val) {
+    if($val != "on") {
+        unset($kafeConfig[$key]);
+    }
+}
+
+function get_client_ip() {
+    $ipaddress = '';
+    if (getenv('HTTP_CLIENT_IP'))
+        $ipaddress = getenv('HTTP_CLIENT_IP');
+    else if(getenv('HTTP_X_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_X_FORWARDED_FOR');
+    else if(getenv('HTTP_X_FORWARDED'))
+        $ipaddress = getenv('HTTP_X_FORWARDED');
+    else if(getenv('HTTP_FORWARDED_FOR'))
+        $ipaddress = getenv('HTTP_FORWARDED_FOR');
+    else if(getenv('HTTP_FORWARDED'))
+       $ipaddress = getenv('HTTP_FORWARDED');
+    else if(getenv('REMOTE_ADDR'))
+        $ipaddress = getenv('REMOTE_ADDR');
+    else
+        $ipaddress = 'UNKNOWN';
+    return $ipaddress;
+}
+
+$IP = base64_encode(SimpleSAML\Utils\Crypto::aesEncrypt(get_client_ip()));
 
 session_cache_limiter('nocache');
 
 $globalConfig = SimpleSAML_Configuration::getInstance();
 
-function translate_attributes_keys($attributes) {
-    $c = SimpleSAML_Configuration::loadFromArray(array());
-    $t = new SimpleSAML_Locale_Translate($c);
-
-    $output = array();
-    foreach ($attributes as $name => $value) {
-        $name = $t->getAttributeTranslation($name);
-        array_push($output, $name);
-    }
-    return implode(',', $output);
-}
-
-function getConsentRule($_state) {
-    $config = SimpleSAML_Configuration::getInstance();
-    $enabled = $config->getBoolean('rzone.consent.enabled');
-    if(!$enabled) {
-        return;
-    }
-
-    // mysql config
-    $tableName = $config->getString('rzone.consent.mysql.log_table');
-    $db_host = $config->getString('rzone.consent.mysql.host');
-    $db_user = $config->getString('rzone.consent.mysql.user');
-    $db_pw = $config->getString('rzone.consent.mysql.password');
-    $db_name = $config->getString('rzone.consent.mysql.database');
-
-    $sp = $_state['SPMetadata']['entityid'];
-
-    $sql = "SELECT * FROM rz_consent_rule WHERE sp_entity='$sp';";
-    $link = mysqli_connect($db_host, $db_user, $db_pw, $db_name);
-    $rows = array();
-    if($result = mysqli_query($link, $sql, MYSQLI_USE_RESULT)) {
-        while($row = mysqli_fetch_object($result)) {
-            array_push($rows, json_decode(json_encode($row), true));
-        }
-        mysqli_free_result($result);
-    }
-    mysqli_close($link);
- 
-    if(count($rows) == 0) return 'SAML';
-    return $rows[0]['consent_type']; 
-} 
-
-function saveConsentLog($_state, $_sp, $attributes, $type=null) {
-    $config = SimpleSAML_Configuration::getInstance();
-    $enabled = $config->getBoolean('rzone.consent.enabled');
-    if(!$enabled) {
-        return;
-    }
-
-    // mysql config
-    $tableName = $config->getString('rzone.consent.mysql.log_table');
-    $db_host = $config->getString('rzone.consent.mysql.host');
-    $db_user = $config->getString('rzone.consent.mysql.user');
-    $db_pw = $config->getString('rzone.consent.mysql.password');
-    $db_name = $config->getString('rzone.consent.mysql.database');
-
-    $link = mysqli_connect($db_host, $db_user, $db_pw, $db_name);
-    
-    // extract log info
-    $eppn = $_state['Attributes']['eduPersonPrincipalName'][0];
-
-    // encrypt ip address
-    $ip = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
-    $ip = mcrypt_ecb(MCRYPT_GOST, 'K4a12kweEy4F1kB3T8AfdUGaRCfsI8F9', $ip, MCRYPT_ENCRYPT);
-    $ip = base64_encode($ip);
-
-    $idp = $_state['Source']['entityid'];
-    //$attributes = $_state['Attributes'];
-    $attributes = translate_attributes_keys($attributes);
-    $attributes = mysqli_real_escape_string($link, $attributes);
-    $validity = array_key_exists('saveconsent', $_REQUEST) ? 90 : 0;
-    if($type == null)
-        $type = $validity == 90 ? 'remember' : 'onetime';
-
-    $sql = "INSERT INTO $tableName(eppn, type, ip_address, idp_entity, sp_entity, attributes, validity) VALUES('$eppn', '$type', '$ip', '$idp', '$_sp', '$attributes', '$validity')";
-
-    mysqli_query($link, $sql);
-}
-
-function isConsentVisible($_state, $_sp) {
-    $config = SimpleSAML_Configuration::getInstance();
-    $enabled = $config->getBoolean('rzone.consent.enabled');
-    if(!$enabled) {
-        return false;
-    }
-
-    // mysql config
-    $tableName = $config->getString('rzone.consent.mysql.log_table');
-    $db_host = $config->getString('rzone.consent.mysql.host');
-    $db_user = $config->getString('rzone.consent.mysql.user');
-    $db_pw = $config->getString('rzone.consent.mysql.password');
-    $db_name = $config->getString('rzone.consent.mysql.database');
-
-    $eppn = $_state['Attributes']['eduPersonPrincipalName'][0];
-
-    $sql = "SELECT * FROM rz_consent_log WHERE eppn='$eppn' and type='remember' and sp_entity='$_sp' ORDER BY timestamp DESC LIMIT 1;";
-    $link = mysqli_connect($db_host, $db_user, $db_pw, $db_name);
-    $rows = array();
-    if($result = mysqli_query($link, $sql, MYSQLI_USE_RESULT)) {
-        while($row = mysqli_fetch_object($result)) {
-            array_push($rows, json_decode(json_encode($row), true));
-        }
-        mysqli_free_result($result);
-    }
-    mysqli_close($link);
-
-    if(count($rows) == 0) return false;
-    
-    $log = $rows[0];
-    
-    $ts = strtotime(date($log['timestamp']));
-    $v = $log['validity'];
-    $now = time();
-   
-    if($ts + $v * 24 * 60 * 60 < $now)
-        return false;
-
-    // TODO If Requested Attributes Changed $pre_attributes = $log['attributes'];
-
-    return true;
-}
+SimpleSAML_Logger::info('Consent - getconsent: Accessing consent interface');
 
 if (!array_key_exists('StateId', $_REQUEST)) {
     throw new SimpleSAML_Error_BadRequest(
@@ -155,12 +66,8 @@ if (!array_key_exists('StateId', $_REQUEST)) {
     );
 }
 
-// Process Start
 $id = $_REQUEST['StateId'];
 $state = SimpleSAML_Auth_State::loadState($id, 'consent:request');
-
-$rule = getConsentRule($state);
-$relayState = $state['saml:RelayState'];
 
 if (array_key_exists('core:SP', $state)) {
     $spentityid = $state['core:SP'];
@@ -170,59 +77,103 @@ if (array_key_exists('core:SP', $state)) {
     $spentityid = 'UNKNOWN';
 }
 
-$sp = $spentityid;
+// The user has pressed the yes-button
+if (array_key_exists('yes', $_REQUEST)) {
+    $udb = $state['userdb'];
+    SimpleSAML_Logger::notice(json_encode($udb));
 
-if($rule == 'OIDC') {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, "https://rz-oidc.kreonet.net/rz-api/client-info?relay_state=$relayState");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-    $content = trim(curl_exec($ch));
-    curl_close($ch);
-
-    $oidc_info = json_decode($content, true);
+    $logdata = array();
+   
+    if(isset($kafeConfig["uid"])) $logdata["uid"] = $udb["uid"][0];
+    if(isset($kafeConfig["eppn"])) $logdata["eppn"] = $udb["eduPersonPrincipalName"][0];
+    if(isset($kafeConfig["email"])) $logdata["email"] = $udb["mail"][0];
+    if(isset($kafeConfig["displayname"])) $logdata["displayname"] = $udb["displayName"][0];
+    if(isset($kafeConfig["attributename"])) {
+        $attr = $state["Attributes"];
+        $attrnames = array();
+        foreach($attr as $key => $value)
+            array_push($attrnames, $key);
+        $logdata["attributenames"] = implode(",", $attrnames);
+    } 
     
-    if($oidc_info['status'] == 200) {
-        $sp = $sp.'/'.$oidc_info['data']['requester'];
-        $oidc_attributes = $oidc_info['data']['requested_attributes'];
-        $oidc_client_name = $oidc_info['data']['client_info']['client_name'];
-        $oidc_privacy = $oidc_info['data']['client_info']['privacy_policy_url'];
-        $oidc_country = $oidc_info['data']['client_info']['country'];
+    $logkeys = "session,spentityid,ip,remember";
+    $logmap = ":session,:sp,:ip,:remember";
+    foreach($logdata as $key => $value) {
+        $logkeys = $logkeys.",".$key;
+        $logmap = $logmap.",:".$key;
     }
+
+    $logdata["sp"] = $spentityid;
+    $logdata["ip"] = $IP;
+    $logdata["session"] = session_id();
+    $logdata["remember"] = array_key_exists('saveconsent', $_REQUEST) ? "on" : "off";
+
+    $db->write("INSERT INTO log_consent($logkeys) VALUES($logmap)", $logdata);
+
+    if (array_key_exists('saveconsent', $_REQUEST)) {
+        SimpleSAML_Logger::stats('consentResponse remember');
+    } 
+    else {
+        SimpleSAML_Logger::stats('consentResponse rememberNot');
+    }
+
+    $statsInfo = array(
+        'remember' => array_key_exists('saveconsent', $_REQUEST),
+    );
+    if (isset($state['Destination']['entityid'])) {
+        $statsInfo['spEntityID'] = $state['Destination']['entityid'];
+    }
+    SimpleSAML_Stats::log('consent:accept', $statsInfo);
+
+    if (   array_key_exists('consent:store', $state) 
+        && array_key_exists('saveconsent', $_REQUEST)
+        && $_REQUEST['saveconsent'] === '1'
+    ) {
+        // Save consent
+        $store = $state['consent:store'];
+        $userId = $state['consent:store.userId'];
+        $targetedId = $state['consent:store.destination'];
+        $attributeSet = $state['consent:store.attributeSet'];
+
+        SimpleSAML_Logger::debug(
+            'Consent - saveConsent() : [' . $userId . '|' .
+            $targetedId . '|' .  $attributeSet . ']'
+        );    
+        try {
+            $store->saveConsent($userId, $targetedId, $attributeSet);
+        } 
+        catch (Exception $e) {
+            SimpleSAML_Logger::error('Consent: Error writing to storage: ' . $e->getMessage());
+        }
+    }
+
+    // 접속 로깅
+    // IDP: '.$state['Source']['entityid'].',
+    $logging = 'LOGIN - SP: '.$state['Destination']['entityid'].', USER: '.json_encode($state['Attributes']);
+    SimpleSAML_Logger::notice($logging);
+
+    /*$encUid = base64_encode(SimpleSAML\Utils\Crypto::aesEncrypt($state['Attributes']['uid'][0]));
+    $encAddr =  base64_encode(SimpleSAML\Utils\Crypto::aesEncrypt($_SERVER['REMOTE_ADDR']));
+
+    $logging = 'Consent for \''.$state['Destination']['entityid'].'\', User \''. $encUid . '\' has made a consent from \'' . $encAddr . '\'.';
+    SimpleSAML_Logger::stats($logging);*/
+
+    SimpleSAML_Auth_ProcessingChain::resumeProcessing($state);
 }
 
 // Prepare attributes for presentation
 $attributes = $state['Attributes'];
 $noconsentattributes = $state['consent:noconsentattributes'];
 
+// Remove attributes that do not require consent
 foreach ($attributes AS $attrkey => $attrval) {
     if (in_array($attrkey, $noconsentattributes)) {
         unset($attributes[$attrkey]);
     }
-    
-    if($oidc_attributes) {
-        if (!in_array($attrkey, $oidc_attributes)) {
-            unset($attributes[$attrkey]);
-        }
-    }
 }
-
 $para = array(
     'attributes' => &$attributes
 );
-
-// The user has pressed the yes-button
-if (array_key_exists('yes', $_REQUEST)) {
-    saveConsentLog($state, $sp, $attributes);
-    SimpleSAML_Auth_ProcessingChain::resumeProcessing($state);
-    exit;
-}
-
-if(isConsentVisible($state, $sp)) {
-    saveConsentLog($state, $sp, $attributes, 'pass');
-    SimpleSAML_Auth_ProcessingChain::resumeProcessing($state);
-    exit;
-}
 
 // Reorder attributes according to attributepresentation hooks
 SimpleSAML_Module::callHooks('attributepresentation', $para);
@@ -239,9 +190,6 @@ $t->data['attributes'] = $attributes;
 $t->data['checked'] = $state['consent:checked'];
 $t->data['useLogo'] = $state['consent:useLogo'];
 
-if($oidc_client_name) {
-    $t->data['oidc_client_name'] = $oidc_client_name;
-}
 // Fetch privacypolicy
 if (array_key_exists('privacypolicy', $state['Destination'])) {
     $privacypolicy = $state['Destination']['privacypolicy'];
@@ -273,7 +221,6 @@ if (array_key_exists('UIInfo', $state['Destination'])) {
         if(array_key_exists('en', $state['Source']['UIInfo']['PrivacyStatementURL'])){
             $privacypolicy =  $state['Source']['UIInfo']['PrivacyStatementURL']['en'];
         }else{
-
             $newidx = 0;
             if(isset($state['Destination']['UIInfo'])){
                 foreach($state['Destination']['UIInfo']['PrivacyStatementURL'] as $key =>$val)
@@ -293,13 +240,11 @@ if (array_key_exists('UIInfo', $state['Destination'])) {
 if ($privacypolicy !== false) {
     $privacypolicy = str_replace(
         '%SPENTITYID%',
-        urlencode($sp), 
+        urlencode($spentityid), 
         $privacypolicy
     );
 }
 $t->data['sppp'] = $privacypolicy;
-if($oidc_privacy)
-    $t->data['sppp'] = $oidc_privacy;
 
 // Set focus element
 switch ($state['consent:focus']) {
@@ -333,9 +278,6 @@ $t->data['country'] = '';
 if (isset($state['SPMetadata']['EntityAttributes']['http://kafe.kreonet.net/jurisdiction'][0])) {
     $t->data['country'] = implode(',' ,$state['SPMetadata']['EntityAttributes']['http://kafe.kreonet.net/jurisdiction']);
     $t->data['country'] = $NATION[$t->data['country']];
-}
-if ( $oidc_country ) {
-    $t->data['country'] = $NATION[$oidc_country];
 }
 
 // RegistrationAuthority 를 이용한다고 설정되었을 경우

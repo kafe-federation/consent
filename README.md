@@ -3,6 +3,7 @@ SimpleSAMLphp module for user consent
 User consent for Korean users (Korean Access Federation)
 
 Add-on by KAFE
+--------------
 
 * GUI
 * trimmed eduPersonTargetedID
@@ -27,3 +28,22 @@ Example configuration on simplesamlphp config.php
 
 ),
 
+consent:Preprocess
+------------------
+* store raw (not-attributeLimited) user attributes to the state variable
+
+Example configuration on config.php
+
+10 => array('class' => 'core:AttributeMap',
+
+      'oid2name',
+
+      ),
+
+11 => 'consent:Preprocess',
+
+12 => array('class' => 'core:AttributeMap',
+
+     'name2oid',
+
+),

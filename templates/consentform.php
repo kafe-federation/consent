@@ -38,9 +38,7 @@ if (is_array($srcName)) {
     $srcName = $this->t($srcName);
 }
 
-if (array_key_exists('oidc_client_name', $this->data)) {
-    $dstName = $this->data['oidc_client_name'];
-} elseif (array_key_exists('name', $this->data['dstMetadata'])) {
+if (array_key_exists('name', $this->data['dstMetadata'])) {
     $dstName = $this->data['dstMetadata']['name'];
 } elseif (array_key_exists('OrganizationDisplayName', $this->data['dstMetadata'])) {
     $dstName = $this->data['dstMetadata']['OrganizationDisplayName'];
@@ -61,106 +59,105 @@ $this->includeAtTemplateBase('consent:includes/header.php');
 
 $dstCountry = '';
 if (!empty($this->data['country'])) {
-    $dstCountry = ' in '.$this->data['country'];
+	$dstCountry = ' in '.$this->data['country'];
 }
 
 ?>
 <div class="login-user">
-    <?php if ($this->data['useLogo'] === true) { ?>
-    <h1><img src="images/logo.gif" alt="logo" /></h1>
-    <?php } ?>
+	<?php if ($this->data['useLogo'] === true) { ?>
+	<h1><img src="images/logo.gif" alt="logo" /></h1>
+	<?php } ?>
 
-    <div class="box-line">
-        <h2>User Information</h2>
-        <a href="#" class="control open">More detail</a>
-        <div class="contents">
-            <ul class="bul-dot">
-                <?php echo(present_attributes_keys($this, $attributes)); ?>
-            </ul>
-        </div>
-    </div>
+	<div class="box-line">
+		<h2>User Information</h2>
+		<a href="#" class="control open">More detail</a>
+		<div class="contents">
+			<ul class="bul-dot">
+				<?php echo(present_attributes_keys($this, $attributes)); ?>
+			</ul>
+		</div>
+	</div>
 
-    <div class="table" data-ref="detail" style="display:none">
-    <?php echo(present_attributes($this, $attributes, '')); ?>
-    </div>
+	<div class="table" data-ref="detail" style="display:none">
+	<?php echo(present_attributes($this, $attributes, '')); ?>
+	</div>
 
-    <ul class="list">
-        <li>
-            <img src="images/login_user_01.gif" alt="" />
-            <p>
-            <?php
-                echo htmlspecialchars($this->t('{consent:consent:consent_privacypolicy}')) . " ";
-                echo "<a target='_blank' href='" . htmlspecialchars($this->data['sppp']) . "'>" . $dstName . "</a>";                
-            ?>
-            </p>
-        </li>
-        <li>
-            <img src="images/login_user_02.gif" alt="" />
-            <p>
-            <?php
-                echo $this->t('{consent:consent:consent_attributes_header}', array( 'SPNAME' =>  $dstName, 'IDPNAME' => $srcName, 'NATION' => $dstCountry));
-            ?>
-            </p>
-        </li>
-        <li>
-            <img src="images/login_user_03.gif" alt="" />
-            <p>
-            <?php
-                echo $this->t('{consent:consent:consent_refuse_right_header}', array( 'SPNAME' => $dstName, 'IDPNAME' => $srcName));
-            ?>
-            </p>
-        </li>
-        <!--
-        <li>
-            <img src="images/login_user_04.gif" alt="" />
-            <p>This is an example. This is an example. This is an example.</p>
-        </li>
-        -->
-    </ul>
-    
-    <form action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
-    <?php if ($this->data['usestorage']) { ?>
-    <p class="login-ing">
-        <input type="checkbox" id="saveconsent" name="saveconsent" <?php echo $this->data['checked'] ? 'checked="checked"' : ''; ?> value="1" />
-        <!-- <label for="saveconsent"><?php // echo $this->t('{consent:consent:remember}'); ?></label> -->
-        <label for="saveconsent">Remember 3 month</label>
-        <a href="" class="icon-tip">
-            <img src="images/icon_tip.gif" alt="?" />
-            <span>Remember to send it to <?php echo $dstName ?>.</span>
-        </a>
-    </p>
-    <?php } ?>
-    
-    <div class="txt-center">
-        <form action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
-        <?php
-        foreach ($this->data['yesData'] as $name => $value) {
-            echo '<input type="hidden" name="'.htmlspecialchars($name).'" value="'.htmlspecialchars($value).'" />';
-        }
-        ?>
-        <input type="submit" class="btn-purple" name="yes"  value="<?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>" />
-        </form>
+	<ul class="list">
+		<li>
+			<img src="images/login_user_01.gif" alt="" />
+			<p>
+			<?php
+				echo htmlspecialchars($this->t('{consent:consent:consent_privacypolicy}')) . " ";
+			    echo "<a target='_blank' href='" . htmlspecialchars($this->data['sppp']) . "'>" . $dstName . "</a>";				
+			?>
+			</p>
+		</li>
+		<li>
+			<img src="images/login_user_02.gif" alt="" />
+			<p>
+			<?php
+				echo $this->t('{consent:consent:consent_attributes_header}', array( 'SPNAME' =>  $dstName, 'IDPNAME' => $srcName, 'NATION' => $dstCountry));
+			?>
+			</p>
+		</li>
+		<li>
+			<img src="images/login_user_03.gif" alt="" />
+			<p>
+			<?php
+				echo $this->t('{consent:consent:consent_refuse_right_header}', array( 'SPNAME' => $dstName, 'IDPNAME' => $srcName));
+			?>
+			</p>
+		</li>
+		<!--
+		<li>
+			<img src="images/login_user_04.gif" alt="" />
+			<p>This is an example. This is an example. This is an example.</p>
+		</li>
+		-->
+	</ul>
+	
+	<form action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
+	<?php if ($this->data['usestorage']) { ?>
+	<p class="login-ing">
+		<input type="checkbox" id="saveconsent" name="saveconsent" <?php echo $this->data['checked'] ? 'checked="checked"' : ''; ?> value="1" />
+		<label for="saveconsent"><?php echo $this->t('{consent:consent:remember}'); ?></label>
+		<a href="" class="icon-tip">
+			<img src="images/icon_tip.gif" alt="?" />
+			<span>Remember to send it to <?php echo $dstName ?>.</span>
+		</a>
+	</p>
+	<?php } ?>
+	
+	<div class="txt-center">
+		<form action="<?php echo htmlspecialchars($this->data['yesTarget']); ?>">
+		<?php
+		foreach ($this->data['yesData'] as $name => $value) {
+			echo '<input type="hidden" name="'.htmlspecialchars($name).'" value="'.htmlspecialchars($value).'" />';
+		}
+		?>
+		<input type="submit" class="btn-purple" name="yes"  value="<?php echo htmlspecialchars($this->t('{consent:consent:yes}')) ?>" />
+		</form>
 
-        <form action="<?php echo htmlspecialchars($this->data['noTarget']); ?>" method="get">
-        <?php
-        foreach ($this->data['noData'] as $name => $value) {
-            echo '<input type="hidden" name="'.htmlspecialchars($name).'" value="'.htmlspecialchars($value).'" />';
-        }
-        ?>
-        <input type="submit" class="btn-gray" name="no" value="<?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>" />
-    </div>
-    </form>
+		<form action="<?php echo htmlspecialchars($this->data['noTarget']); ?>" method="get">
+		<?php
+		foreach ($this->data['noData'] as $name => $value) {
+			echo '<input type="hidden" name="'.htmlspecialchars($name).'" value="'.htmlspecialchars($value).'" />';
+		}
+		?>
+		<input type="submit" class="btn-gray" name="no" value="<?php echo htmlspecialchars($this->t('{consent:consent:no}')) ?>" />
+	</div>
+	</form>
 </div>
 
 <?php
 function present_attributes_keys($t, $attributes) 
 {
-    $output = '';
+	$output = '';
     foreach ($attributes as $name => $value) {
         $name = $t->getAttributeTranslation($name);
-        $output .= '<li>'.$name.'</li>'."\n";
-    }
-    return $output;
+		$output .= '<li>'.$name.'</li>'."\n";
+	}
+	return $output;
 }
 
 /**
